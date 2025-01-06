@@ -1,0 +1,46 @@
+#header {
+    display: flex;
+    background-color: rgb(92, 95, 255);
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+#right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+}
+
+#login {
+    display: flex;
+    justify-content: flex-end;
+    width: 50px;
+    margin-left: auto;
+}
+
+#left {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-right: auto;
+}
+
+#left.visible{
+    opacity: 1;
+}
+
+@media (max-width: 500px) {
+    #login {
+        display: flex;
+        justify-content: flex-end;
+        width: 100px;
+        margin-left: 0%;
+        width: 50px;
+    }
+
+    #header {
+        justify-content: center;
+        justify-content: space-between;
+    }
+  }

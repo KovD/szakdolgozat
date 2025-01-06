@@ -1,0 +1,23 @@
+#BB {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10%;
+}
+
+button {
+    font-size: 70px;
+    margin: 10px;
+}
+
+@media (max-width: 500px) {
+    #BB {
+        margin: 3px;
+    }
+
+    button {
+        font-size: 40px;
+        margin: 10px;
+    }
+  }

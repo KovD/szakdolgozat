@@ -1,0 +1,19 @@
+#fill {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-self: center;
+    padding: 10%;
+}
+
+#back{
+    font-size: 20px;
+}
+
+input {
+    font-size: 35px;
+}
+
+#submit{
+    font-size: 40px;
+}
