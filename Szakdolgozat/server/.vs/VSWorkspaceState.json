@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\migrations",
-    "\\model"
+    "\\Controllers"
   ],
-  "SelectedNode": "\\migrations\\AppDbContextModelSnapshot.cs",
+  "SelectedNode": "\\services",
   "PreviewInSolutionExplorer": false
 }

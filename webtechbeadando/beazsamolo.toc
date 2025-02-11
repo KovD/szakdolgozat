@@ -1,0 +1,13 @@
+\select@language {hungarian} \contentsline {section}{\numberline {1}Témaválasztás}{3}{section.1}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {1.1}Álltalánosan}{3}{subsection.1.1}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {1.2}Mi inspirállta a témát}{3}{subsection.1.2}%
+\select@language {hungarian} \contentsline {section}{\numberline {2}Hsznált technológiák}{3}{section.2}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {2.1}IDE}{3}{subsection.2.1}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {2.2}frontend}{4}{subsection.2.2}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {2.3}Backend}{5}{subsection.2.3}%
+\select@language {hungarian} \contentsline {section}{\numberline {3}A weboldal tartalma \ felépítése:}{5}{section.3}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {3.1}Bejelentkező / regisztrációs felület}{5}{subsection.3.1}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {3.2}Kezdőlap}{6}{subsection.3.2}%
+\select@language {hungarian} \contentsline {section}{\numberline {4}Lehetséges problémák}{7}{section.4}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {4.1}Kihasználatlanság}{7}{subsection.4.1}%
+\select@language {hungarian} \contentsline {subsection}{\numberline {4.2}Csalások}{7}{subsection.4.2}%

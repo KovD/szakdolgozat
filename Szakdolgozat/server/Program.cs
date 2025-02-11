@@ -1,11 +1,8 @@
-using Microsoft.EntityFrameworkCore;
+using server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -18,6 +15,8 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+builder.Services.AddSingleton<SqliteService>();
 
 var app = builder.Build();
 
@@ -34,5 +33,8 @@ app.UseCors("AllowLocalhost");
 app.UseAuthorization();
 
 app.MapControllers();
+
+var sqliteService = app.Services.GetRequiredService<SqliteService>();
+sqliteService.InitializeDatabase();
 
 app.Run();
