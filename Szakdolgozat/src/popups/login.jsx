@@ -39,20 +39,21 @@ function Login({ onClose }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (password !== password2) {
-            setError('The passwords do not match');
-            return;
-        }
     
-        try {
+        if (reg) {
+            if (password !== password2) {
+                setError('The passwords do not match');
+                return;
+            }
+    
             const response = await fetch('http://localhost:5000/api/Register/Register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username,
-                    password
+                    userName: username,
+                    password: password
                 }),
             });
     
@@ -64,9 +65,25 @@ function Login({ onClose }) {
                 const errorData = await response.json();
                 setError(errorData.message || 'Registration failed');
             }
-        } catch (error) {
-            console.error('Error during registration:', error);
-            setError('An unexpected error occurred. Please try again later.');
+        } else {
+            alert(username)
+            const response = await fetch('http://localhost:5000/api/Login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserName: username, Password: password }),
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    alert("Sikeres bejelentkezés!");
+                } else {
+                    setError(data.message || "Hibás adatok.");
+                }
+            } else {
+                const errorData = await response.json();
+                setError(errorData.message || "Hiba a kérésben.");
+            }
         }
     };
 
@@ -92,6 +109,8 @@ function Login({ onClose }) {
                             id="username"
                             name="username"
                             placeholder="felhasználónév"
+                            value={username}
+                            onChange={handleUsernameChange}
                             required
                         />
                         <br />
@@ -101,10 +120,12 @@ function Login({ onClose }) {
                             id="password"
                             name="password"
                             placeholder="Jelszó"
+                            value={password}
+                            onChange={handlePasswordChange}
                             required
                         />
                         <br />
-                        <button id="logButton">Bejelentkezés</button><br />
+                        <button id="logButton" onClick={handleSubmit}>Bejelentkezés</button><br />
                         <button id="regButton" onClick={() => switchPopup()}>Regisztráció</button><br />
                     </form>
                 ) : (

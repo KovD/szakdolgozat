@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using Server.Models;
 
 namespace Server.Controllers
 {
@@ -44,11 +45,5 @@ namespace Server.Controllers
 
             return Ok(new { message = "User registered successfully." });
         }
-    }
-
-    public class User
-    {
-        public string UserName { get; set; }
-        public string Password { get; set; }
     }
 }

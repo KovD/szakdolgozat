@@ -1,0 +1,44 @@
+.box {
+    width: 200px;
+    min-height: 100px;
+    background-color: lightblue;
+    flex-direction: column;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    font-size:22px;
+    align-items:center;
+    border-radius: 10px;
+    padding: 6px 15%;
+    height: auto;
+}
+
+.prop_box {
+    margin: 0px 0;
+}
+
+#name{
+    font-size:20px;
+    width: 100%;
+}
+
+.createbuttons{
+    width: 40px;
+    height: 40px;
+    font-size: 140%;
+}
+
+#addProp{
+    width: 30%;
+    height: 30%;
+    font-size: 80%;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}

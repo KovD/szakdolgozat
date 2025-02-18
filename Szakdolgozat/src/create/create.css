@@ -1,0 +1,13 @@
+#create {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-self: center;
+    padding: 10%;
+}
+
+#publish{
+    margin: 20%;
+    display: flex;
+    flex-direction: row;
+}
