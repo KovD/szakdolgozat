@@ -1,25 +1,29 @@
 .box {
-    width: 200px;
+    width: 80%;
     min-height: 100px;
-    background-color: lightblue;
+    background-color: rgb(166, 213, 255);
     flex-direction: column;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
     display: flex;
     font-size:22px;
     align-items:center;
     border-radius: 10px;
-    padding: 6px 15%;
+    padding: 6px 10%;
     height: auto;
 }
-
 .prop_box {
-    margin: 0px 0;
+    margin: 1px;
+}
+
+#typeC{
+    flex-direction: row;
 }
 
 #name{
     font-size:20px;
     width: 100%;
 }
+
 
 .createbuttons{
     width: 40px;
@@ -42,3 +46,19 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
+
+#infinite-quiz{
+    width: 70px;
+    height: 20px;
+    font-size: 55%;
+    padding: 0px;
+}
+
+@media (max-width: 500px) {
+    h1{
+        font-size: smaller;
+    }
+    .box{
+        font-size: 20px;
+    }
+  }

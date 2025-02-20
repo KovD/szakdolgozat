@@ -1,0 +1,19 @@
+#typeC {
+    width: auto;
+    background-color: rgb(255, 255, 255);
+    flex-direction: row;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+    border-radius: 10px;
+    padding: 2px;
+    margin: 2px;
+    justify-content: space-between;
+    margin: 3px;
+}
+
+#trash {
+    margin-left: 5px;
+    cursor: pointer;
+}

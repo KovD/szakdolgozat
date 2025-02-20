@@ -1,21 +1,35 @@
 import './popup.css';
+import { useState } from 'react';
 
-function Popup({ onClose, onChange, name, type }) {
-    const handleButtonClick = (selectedType) => {
-        onChange(selectedType);  // Típus váltása
-    };
+function Popup({ onClose, onChange}) {
+
+  const [name, setName] = useState('');
+
+  const handleButtonClick = (selectedType, name) => {
+    if (name.trim() !== '') {
+      onChange(selectedType, name);
+      onClose();
+    } else {
+      alert('Please enter a valid name');
+    }
+  };
 
     return (
         <div id="popup">
             <div id="back" onClick={onClose}>x</div>
             <div id="popup-content">
-                <h2>{name}</h2>
+                <label htmlFor="name">Type the name of the property: </label>
+                <input type="text" 
+                name="name"
+                value={name}
+                maxLength={7}
+                onChange={(e) => setName(e.target.value)}
+                />
                 <p>Choose input type:</p>
                 <div className="button-group">
-                    <button onClick={() => handleButtonClick('Text')}>Text</button>
-                    <button onClick={() => handleButtonClick('Number')}>Number</button>
+                    <button className='type' onClick={() => handleButtonClick('Text', name)}>Text</button>
+                    <button className='type' onClick={() => handleButtonClick('Number', name)}>Number</button>
                 </div>
-                <p>Current type: {type}</p>
             </div>
         </div>
     );
