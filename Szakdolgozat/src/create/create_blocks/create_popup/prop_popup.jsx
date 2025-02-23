@@ -16,7 +16,7 @@ function Popup({ onClose, onChange}) {
 
     return (
         <div id="popup">
-            <div id="back" onClick={onClose}>x</div>
+            <div id="back_go" onClick={onClose}>x</div>
             <div id="popup-content">
                 <label htmlFor="name">Type the name of the property: </label>
                 <input type="text" 
