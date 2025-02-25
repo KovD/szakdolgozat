@@ -1,8 +1,8 @@
-import { useState } from "react";
+import {useContext, useState } from "react";
 import "./slider.css";
 import TagElement from "./Tag/tag_element";
 
-function Tag_Slider({ setisSliderVisible, isVisible }) {
+function Tag_Slider({signal, tagfunc, setisSliderVisible, isVisible }) {
   const [tags, setTags] = useState([]);
 
   const addTag = () => {
@@ -19,12 +19,12 @@ function Tag_Slider({ setisSliderVisible, isVisible }) {
         <p>»</p>
       </button>
       <div id="tcontent">
-        <div id="tag_table">
-          {tags.map((tag) => (
-            <TagElement key={tag.id} onDelete={() => onDelete(tag.id)} />
-          ))}
-        </div>
-        <button onClick={addTag}>Afd</button>
+          <div id="tag_table">
+            {tags.map((tag) => (
+              <TagElement signal={signal} tagfunc={tagfunc} key={tag.id} onDelete={() => onDelete(tag.id)} />
+            ))}
+          </div>
+          <button onClick={addTag}>Add Tag</button>
       </div>
     </div>
   );

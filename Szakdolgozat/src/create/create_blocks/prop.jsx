@@ -1,15 +1,35 @@
 import './create_design.css';
 import Popup from './create_popup/prop_popup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TypeVis from './element/typeVis';
+import { use } from 'react';
 
-function Props({ onClose, isPopupVisible, togglePopup }) {
+function Props({signal, fixProps, onClose, isPopupVisible, togglePopup }) {
     const [type, setType] = useState('');
     const [name, setName] = useState('');
     const [typesList, setTypesList] = useState([]);
     const [timer, setTimer] = useState('');
     const [isInfinite, setIsInfinite] = useState(false);
+    const [addedProps, setAddedProps] = useState([]);
 
+    const collectProps = (title, type) => {
+        const newProp = {
+            title: title,
+            type:type
+        };
+        setAddedProps((prevProp) => [...prevProp, newProp]);
+    };
+
+    useEffect(() => {
+        if(signal)
+        {
+        setAddedProps([]);
+        typesList.forEach(item => {
+            collectProps(item.name, item.type);
+        });
+        fixProps(name, timer, isInfinite, addedProps);
+    }
+    }, [signal]);
 
     const handleTypeChange = (selectedType, selectedName) => {
         if (typesList.length < 5) {
@@ -36,7 +56,8 @@ function Props({ onClose, isPopupVisible, togglePopup }) {
             <input 
                 className="prop_box"
                 id="name"
-                type="text" 
+                type="text"
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Enter quiz name"
                 maxLength={20} 
             />
@@ -45,6 +66,7 @@ function Props({ onClose, isPopupVisible, togglePopup }) {
                 className="prop_box"
                 id="name"
                 type="number"
+                onChange={(e) => setTimer(e.target.value)}
                 maxLength={10} 
                 placeholder="Timer in sec"
             />
@@ -59,7 +81,7 @@ function Props({ onClose, isPopupVisible, togglePopup }) {
             </div>
             <div className="types-container">
                 {typesList.map((item, index) => (
-                    <TypeVis key={index} onDelete={() => handleDelete(index)} type={item.type} name={item.name} />
+                    <TypeVis signal={signal} collectProps={collectProps} key={index} onDelete={() => handleDelete(index)} type={item.type} name={item.name} />
                 ))}
             </div>
             <button id="addProp" onClick={togglePopup}>Add</button>

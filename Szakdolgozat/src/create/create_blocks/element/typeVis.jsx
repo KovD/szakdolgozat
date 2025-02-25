@@ -1,7 +1,10 @@
+import { useEffect } from 'react';
 import './typeVis.css';
 
-function TypeVis({ onDelete, type, name }) {
-    console.log(name, type);
+function TypeVis({signal, collectProps,  onDelete, type, name }) {
+
+    useEffect(() => {if(signal){collectProps(name, type)}}, [signal]);
+
     return (
         <div id="typeC">
             {name}: {type}

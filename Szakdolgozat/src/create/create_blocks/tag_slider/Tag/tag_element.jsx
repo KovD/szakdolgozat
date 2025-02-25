@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useEffect } from "react";
 import '../../question/quest.css';
 
-const TagElement = ({ onDelete }) => {
+const TagElement = ({signal, tagfunc, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ID, setID] = useState('');
   const [Value, setValue] = useState('');
@@ -9,6 +10,14 @@ const TagElement = ({ onDelete }) => {
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    if(signal)
+    {
+      tagfunc(ID, Value);
+    }
+  }, [signal]);
+
 
   const handleInputClick = (e) => {
     e.stopPropagation();
@@ -21,7 +30,7 @@ const TagElement = ({ onDelete }) => {
         className={`collapsible-header ${isOpen ? 'open' : ''}`}
       >
         <div id="delete_quest" onClick={(e) => { e.stopPropagation(); onDelete(); }}>
-          X
+          ⓧ
         </div>
         <input
           type="text"
