@@ -46,7 +46,7 @@ function Login({ onClose }) {
                 return;
             }
     
-            const response = await fetch('http://localhost:5000/api/Register/Register', {
+            const response = await fetch('http://localhost:5000/users/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,35 +66,38 @@ function Login({ onClose }) {
                 setError(errorData.message || 'Registration failed');
             }
         } else {
-            alert(username)
-            const response = await fetch('http://localhost:5000/api/Login', {
+            const response = await fetch('http://localhost:5000/users/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ UserName: username, Password: password }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userName: username,
+                    password: password
+                }),
             });
-            
+    
             if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    alert("Sikeres bejelentkezés!");
-                } else {
-                    setError(data.message || "Hibás adatok.");
-                }
+                const userData = await response.json();
+                console.log('Login successful!', userData);
+                alert('Login successful!');
             } else {
-                const errorData = await response.json();
-                setError(errorData.message || "Hiba a kérésben.");
+                setError('Invalid username or password');
             }
         }
     };
+    
 
     const checkUsernameAvailability = async (username) => {
-        try {
-            const response = await fetch(`http://localhost:5000/api/UsernameTaken/IsUsernameTaken/${username}`);
-            const data = await response.json();
-            setIsUsernameTaken(data.isTaken);
-        } catch (error) {
-            console.error('Error checking username availability:', error);
-        }
+        // try {
+        //     const response = await fetch(`http://localhost:5000/api/UsernameTaken/IsUsernameTaken/${username}`);
+        //     const data = await response.json();
+        //     setIsUsernameTaken(data.isTaken);
+        // } catch (error) {
+        //     console.error('Error checking username availability:', error);
+        // }
+
+        console.log('VIP');
     };
 
     return (

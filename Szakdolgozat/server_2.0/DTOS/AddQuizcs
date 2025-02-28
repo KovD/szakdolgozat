@@ -1,0 +1,9 @@
+namespace Server_2_0.DTOS
+{
+    public record AddQuiz
+    {
+        public string Title { get; init; } = string.Empty;
+        public string Location { get; init; } = string.Empty;
+        public DateTime CreateDate { get; init; } = string.Empty;
+    }
+}
