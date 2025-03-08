@@ -2,7 +2,7 @@ import './create.css';
 import Props from './create_blocks/prop';
 import Quest from './create_blocks/question/quest';
 import Tag_Slider from './create_blocks/tag_slider/slider';
-import {useEffect,useState } from 'react';
+import {useRef, useEffect,useState } from 'react';
 
 function Create() {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -10,66 +10,62 @@ function Create() {
     const [typeChange, settypeChange] = useState(false);
     const [questions, setQuestions] = useState([]);
     const [signal, setSignal] = useState(false);
-    const [dataquestions, setdataQuestions] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [props, setprops] = useState([]);
+    const dataquestions = useRef([])
+    const tags = useRef([]);
+    const Allprops = useRef();
 
-    const signalChange = () => {
-        const currentDataquestions = [...dataquestions];
-        const currentTags = [...tags];
-        const currentProps = { ...props };
-    
+    const signalChange = async () => {
+        dataquestions.current = [];
+        tags.current = [];
+        Allprops.current = [];
         setSignal(true);
-        setTimeout(() => {
-            generatePayload(currentDataquestions, currentTags, currentProps);
-            setSignal(false);
-        }, 0);
-    
-        setdataQuestions([]);
-        setprops([]);
-        setTags([]);
-    };
+        await new Promise(resolve => setTimeout(resolve, 0)); 
+        setSignal(false);
+        await new Promise(resolve => setTimeout(resolve, 50));
+
+        const res = await fetch('http://localhost:5000/users/PostQuiz', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(
+                {
+                    dataQuestions: dataquestions.current,
+                    tags: tags.current,
+                    Allprops: Allprops.current
+                }
+            ),
+        });
+
+        if (res.status === 400) {
+            alert('Something isn\'t filled');
+        }
+    }
+
     
 
     const addNewDataQuestion = (title, correctAnswer, wrongAnswers = [], amount) => {
-        const newQuestion = {
-            title: title,
-            correctAnswer: correctAnswer,
-            wrongAnswers: wrongAnswers,
-            amount: amount
-        };
-        setdataQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+    dataquestions.current.push({
+        title: title,
+        correctAnswer: correctAnswer,
+        wrongAnswers: wrongAnswers,
+        amount: amount
+    });
     };
 
     const fixProps = (title, timer, infinite = false, props = []) => {
-        const propsFr = {
+        Allprops.current= {
             title: title,
             timer: timer,
             infinite: infinite,
-            props: props
-        };
-        setprops(propsFr);
-    };
-
-    const generatePayload = (dataquestions, tags, props) => {
-        const payload = {
-            title: props.title,
-            timer: props.timer,
-            infinite: props.infinite,
-            properties: props.props,
-            questions: dataquestions,
-            tags: tags
-        };
-    
-        console.log("Generated Payload:", JSON.stringify(payload, null, 2));
+            props: props};
     };
 
     const addNewTag = (id, value = []) => {
-        const newTag = {
+        tags.current.push({
             id: id,
-            value: value
-        };
-        setTags((prevTags) => [...prevTags, newTag]);
+            value: value});
     };
 
     useEffect(() => {

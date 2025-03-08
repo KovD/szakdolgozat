@@ -10,5 +10,10 @@ public class QuizWebContext : DbContext
     public DbSet<QuizEntity> Quizes => Set<QuizEntity>();
     public DbSet<UserEntity> Users => Set<UserEntity>();
     public DbSet<FillersEntity> Fillers => Set<FillersEntity>();
+    public DbSet<QuestionEntity> Questions => Set<QuestionEntity>();
+    public DbSet<RightAnswersEntity> RightAnswers => Set<RightAnswersEntity>();
+    public DbSet<WrongAnswersEntity> WrongAnswers => Set<WrongAnswersEntity>();
+    public DbSet<TagsEntity> Tags => Set<TagsEntity>();
+    public DbSet<PropEntity> Props => Set<PropEntity>();
 
 }

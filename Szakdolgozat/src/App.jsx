@@ -6,6 +6,9 @@ import Create from './create/create.jsx';
 import './assets/webpage.css';
 import Login from './popups/login.jsx'
 import Header from './universal/header/header.jsx';
+import withAuth from './withAut.jsx';
+
+const ProtectedCreate = withAuth(Create);
 
 function App() {
     
@@ -26,7 +29,7 @@ function App() {
                 <Header loginShowerTrue={loginShowerTrue}/>
                 <Routes>
                     <Route path="/" element={<Page/>} />
-                    <Route path="/create" element={<Create />} />
+                    <Route path="/create" element={<ProtectedCreate/>}/>
                     <Route path="/fill" element={<Fill />} />
                 </Routes>
             </div>

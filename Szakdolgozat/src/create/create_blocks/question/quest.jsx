@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './quest.css';
 
-const Quest = ({Questions, signal, onDelete }) => {
+const Quest = ({onUpdate, Questions, signal, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState('');
@@ -10,12 +10,19 @@ const Quest = ({Questions, signal, onDelete }) => {
   
 
   useEffect(() => {
-    if(signal)
-    {
-      Questions(title, correctAnswer, wrongAnswers, amount);
+    if(signal) {
+      const answersArray = wrongAnswers.split('\n').filter(a => a.trim() !== '');
+      const processedData = {
+        title: title.trim(),
+        correctAnswer: correctAnswer.trim(),
+        wrongAnswers: answersArray,
+        amount: parseInt(amount) || 0
+      };
+      
+      Questions(processedData.title, processedData.correctAnswer, 
+               processedData.wrongAnswers, processedData.amount);
     }
-
-}, [signal]);
+  }, [signal, title, correctAnswer, wrongAnswers, amount]);
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen);

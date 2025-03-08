@@ -1,8 +1,8 @@
 import './create_design.css';
 import Popup from './create_popup/prop_popup';
-import { useEffect, useState } from 'react';
+import {useRef, useEffect, useState } from 'react';
 import TypeVis from './element/typeVis';
-import { use } from 'react';
+import {use } from 'react';
 
 function Props({signal, fixProps, onClose, isPopupVisible, togglePopup }) {
     const [type, setType] = useState('');
@@ -11,24 +11,21 @@ function Props({signal, fixProps, onClose, isPopupVisible, togglePopup }) {
     const [timer, setTimer] = useState('');
     const [isInfinite, setIsInfinite] = useState(false);
     const [addedProps, setAddedProps] = useState([]);
-
-    const collectProps = (title, type) => {
-        const newProp = {
-            title: title,
-            type:type
-        };
-        setAddedProps((prevProp) => [...prevProp, newProp]);
-    };
+    const typesListRef = useRef(typesList);
 
     useEffect(() => {
-        if(signal)
-        {
-        setAddedProps([]);
-        typesList.forEach(item => {
-            collectProps(item.name, item.type);
-        });
-        fixProps(name, timer, isInfinite, addedProps);
-    }
+        typesListRef.current = typesList;
+    }, [typesList]);
+
+    useEffect(() => {
+        if(signal) {
+            const propsData = typesListRef.current.map(item => ({
+                title: item.name,
+                type: item.type
+            }));
+            
+            fixProps(name, parseInt(timer), isInfinite, propsData);
+        }
     }, [signal]);
 
     const handleTypeChange = (selectedType, selectedName) => {
@@ -81,7 +78,7 @@ function Props({signal, fixProps, onClose, isPopupVisible, togglePopup }) {
             </div>
             <div className="types-container">
                 {typesList.map((item, index) => (
-                    <TypeVis signal={signal} collectProps={collectProps} key={index} onDelete={() => handleDelete(index)} type={item.type} name={item.name} />
+                    <TypeVis signal={signal} key={index} onDelete={() => handleDelete(index)} type={item.type} name={item.name} />
                 ))}
             </div>
             <button id="addProp" onClick={togglePopup}>Add</button>

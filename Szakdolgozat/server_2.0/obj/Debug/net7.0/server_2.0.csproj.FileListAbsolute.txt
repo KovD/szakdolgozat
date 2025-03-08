@@ -87,3 +87,10 @@ C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Micr
 C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Dani\Desktop\szakdolgozat\Szakdolgozat\server_2.0\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll

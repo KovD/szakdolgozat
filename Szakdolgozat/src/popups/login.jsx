@@ -79,8 +79,12 @@ function Login({ onClose }) {
     
             if (response.ok) {
                 const userData = await response.json();
-                console.log('Login successful!', userData);
-                alert('Login successful!');
+    
+                if (userData.token) {
+                    localStorage.setItem('token', userData.token);
+                } else {
+                    console.log('Login failed:');
+                }
             } else {
                 setError('Invalid username or password');
             }
