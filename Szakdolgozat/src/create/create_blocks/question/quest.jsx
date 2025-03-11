@@ -12,9 +12,10 @@ const Quest = ({onUpdate, Questions, signal, onDelete }) => {
   useEffect(() => {
     if(signal) {
       const answersArray = wrongAnswers.split('\n').filter(a => a.trim() !== '');
+      const correcAnswersArray = correctAnswer.split('\n').filter(a => a.trim() !== '');
       const processedData = {
         title: title.trim(),
-        correctAnswer: correctAnswer.trim(),
+        correctAnswer: correcAnswersArray,
         wrongAnswers: answersArray,
         amount: parseInt(amount) || 0
       };

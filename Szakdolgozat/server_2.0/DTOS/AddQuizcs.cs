@@ -21,7 +21,7 @@ namespace Server_2_0.DTOS
         public string Title { get; set; } = string.Empty;
 
         [JsonPropertyName("correctAnswer")]
-        public string CorrectAnswer { get; set; } = string.Empty;
+        public List<string> CorrectAnswer { get; set; } = new();
 
         [JsonPropertyName("wrongAnswers")]
         public List<string> WrongAnswers { get; set; } = new();

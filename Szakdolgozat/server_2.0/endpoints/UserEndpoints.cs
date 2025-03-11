@@ -32,7 +32,8 @@ namespace Server_2_0.endpoints.UserEndpoints
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName)
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(1),
+                NotBefore = DateTime.UtcNow,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -100,9 +101,10 @@ namespace Server_2_0.endpoints.UserEndpoints
                 return Results.Ok(loginResponse);
             });
 
-            group.MapPost("/PostQuiz",[Authorize] (AddQuiz Quiz, QuizWebContext db, HttpContext context) =>
+            group.MapPost("/PostQuiz", [Authorize](AddQuiz Quiz, QuizWebContext db, HttpContext context) =>
             {
                 var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
+                string Gencode = GenerateRandomCode(db);
                 if (userIdClaim == null)
                 {
                     return Results.Unauthorized();
@@ -112,8 +114,6 @@ namespace Server_2_0.endpoints.UserEndpoints
 
                 var user = db.Users.Find(userId);
 
-                Console.WriteLine(userId);
-
                 if (Quiz == null)
                 {
                     return Results.BadRequest();
@@ -122,8 +122,10 @@ namespace Server_2_0.endpoints.UserEndpoints
                 QuizEntity newQuiz = new()
                 {
                     QuizName = Quiz.Allprops.Title,
-                    Code = GenerateRandomCode(db, 5),
+                    Code = Gencode,
                     Creation = DateTime.Now,
+                    Timer = Quiz.Allprops.Timer,
+                    Infinite = Quiz.Allprops.Infinite,
                     UserId = userId,
                     User = user
                 };
@@ -151,7 +153,8 @@ namespace Server_2_0.endpoints.UserEndpoints
                     {
                         Question = Questions.Title,
                         QuizID = newQuiz.Id,
-                        Quiz = newQuiz
+                        Quiz = newQuiz,
+                        Amount = Questions.Amount ?? 100
                     };
 
                     db.Questions.Add(NewQuestion);
@@ -171,16 +174,19 @@ namespace Server_2_0.endpoints.UserEndpoints
                     }
 
 
-                    RightAnswersEntity NewCorrectAnswer = new()
+                    foreach (var RightAnswer in Questions.CorrectAnswer)
                     {
-                        QuestionID = NewQuestion.Id,
-                        RightAnswer = Convert.ToString(Questions.CorrectAnswer),
-                        Quiz = NewQuestion
-                    };
+                        RightAnswersEntity NewCorrectAnswer = new()
+                        {
+                            QuestionID = NewQuestion.Id,
+                            RightAnswer = RightAnswer,
+                            Quiz = NewQuestion
+                        };
 
-                    db.RightAnswers.Add(NewCorrectAnswer);
-                    db.SaveChanges();
+                        db.RightAnswers.Add(NewCorrectAnswer);
+                        db.SaveChanges();
                     }
+                }
 
                 foreach (var Tags in Quiz.Tags)
                 {
@@ -196,34 +202,259 @@ namespace Server_2_0.endpoints.UserEndpoints
                     db.SaveChanges();
                 }
 
-                return Results.Ok();
+                return Results.Ok(Gencode);
             });
 
             group.MapGet("/GetQuiz/{code}", (string code, QuizWebContext db) =>
             {
-                int Quiz = db.Quizes.FirstOrDefault(q => q.Code == code).Id;
-                QuestionEntity[] Questions = db.Questions.Where(q => q.QuizID == Quiz).ToArray();
-                
-                SendbackQuiz SendBack = new();
+                var Quiz = db.Quizes.FirstOrDefault(q => q.Code == code);
+                if (Quiz == null)
+                {
+                    return Results.NotFound();
+                }
 
-                SendBack.Title = db.Quizes.FirstOrDefault(q => q.Id == Quiz).QuizName;
-                SendBack.Timer = 45;
-                SendBack.Infinite = false; 
+                int ID = Quiz.Id;
+                Random rng = new Random();
+
+
+                var Questions = db.Questions
+                    .Where(q => q.QuizID == ID)
+                    .AsEnumerable()
+                    .OrderBy(q => rng.Next())
+                    .ToArray();
+
+                TagsEntity[] Tags = db.Tags.Where(t => t.QuizID == ID).ToArray();
+                PropEntity[] Props = db.Props.Where(p => p.QuizID == ID).ToArray();
+                
+                SendbackQuiz SendBack = new()
+                {
+                    Title = Quiz.QuizName,
+                    Timer = Quiz.Timer,
+                    Infinite = Quiz.Infinite,
+                    ID = ID
+                };
+
+
+                SendBack.Tags.AddRange(Tags.Select(t => new TagsDto 
+                { 
+                    Id = t.Name, 
+                    Value = t.Value 
+                }));
+
+                SendBack.Props.AddRange(Props.Select(p => new OptPropsDto
+                {
+                    Value = p.PropName,
+                    Type = p.Type
+                }));
+
 
                 foreach (var Question in Questions)
                 {
-                    SendBack.Questions.Add(new QuestionsDto
+                    var NewQuestion = new QuestionsDto
                     {
-                        Question = Question.Question,
-                        Answers = db.WrongAnswers.Where(w => w.QuestionID == Question.Id).Select(w => new AnswersDto
-                        {
-                            id = w.Id,
-                            Value = w.WrongAnswer
-                        }).ToList()
-                    });      
+                        id = Question.Id,
+                        Question = Question.Question
+                    };
+
+                    int Amount = Question.Amount;
+                    var RightAnswers = db.RightAnswers
+                        .Where(r => r.QuestionID == Question.Id)
+                        .ToArray();
+                    var WrongAnswers = db.WrongAnswers
+                        .Where(w => w.QuestionID == Question.Id)
+                        .ToArray();
+
+                    var allAnswers = new List<AnswersDto>();
+                    if (RightAnswers.Length > 0)
+                    {
+                        var correct = RightAnswers[rng.Next(RightAnswers.Length)];
+                        allAnswers.Add(new AnswersDto 
+                        { 
+                            id = correct.Id, 
+                            Value = correct.RightAnswer 
+                        });
+                    }
+
+                    var wrongsToAdd = (Amount == 0 || Amount > WrongAnswers.Length + 1)
+                        ? WrongAnswers
+                        : WrongAnswers.OrderBy(x => rng.Next())
+                                    .Take(Amount - 1);
+
+                    allAnswers.AddRange(wrongsToAdd.Select(w => new AnswersDto
+                    {
+                        id = w.Id,
+                        Value = w.WrongAnswer
+                    }));
+
+                    NewQuestion.Answers.AddRange(allAnswers
+                        .OrderBy(a => rng.Next()));
+
+                    SendBack.Questions.Add(NewQuestion);
                 }
+
+                return Results.Ok(SendBack);
             });
             
+            group.MapGet("/GetQuizWithID/{id}", (int id, QuizWebContext db) =>
+            {
+                var Quiz = db.Quizes.FirstOrDefault(q => q.Id == id);
+                if (Quiz == null)
+                {
+                    return Results.NotFound();
+                }
+
+                int ID = Quiz.Id;
+                Random rng = new Random();
+
+
+                var Questions = db.Questions
+                    .Where(q => q.QuizID == ID)
+                    .AsEnumerable()
+                    .OrderBy(q => rng.Next())
+                    .ToArray();
+
+                TagsEntity[] Tags = db.Tags.Where(t => t.QuizID == ID).ToArray();
+                PropEntity[] Props = db.Props.Where(p => p.QuizID == ID).ToArray();
+                
+                SendbackQuiz SendBack = new()
+                {
+                    Title = Quiz.QuizName,
+                    Timer = Quiz.Timer,
+                    Infinite = Quiz.Infinite,
+                    ID = ID
+                };
+
+
+                SendBack.Tags.AddRange(Tags.Select(t => new TagsDto 
+                { 
+                    Id = t.Name, 
+                    Value = t.Value 
+                }));
+
+                SendBack.Props.AddRange(Props.Select(p => new OptPropsDto
+                {
+                    Value = p.PropName,
+                    Type = p.Type
+                }));
+
+
+                foreach (var Question in Questions)
+                {
+                    var NewQuestion = new QuestionsDto
+                    {
+                        id = Question.Id,
+                        Question = Question.Question
+                    };
+
+                    int Amount = Question.Amount;
+                    var RightAnswers = db.RightAnswers
+                        .Where(r => r.QuestionID == Question.Id)
+                        .ToArray();
+                    var WrongAnswers = db.WrongAnswers
+                        .Where(w => w.QuestionID == Question.Id)
+                        .ToArray();
+
+                    var allAnswers = new List<AnswersDto>();
+                    if (RightAnswers.Length > 0)
+                    {
+                        var correct = RightAnswers[rng.Next(RightAnswers.Length)];
+                        allAnswers.Add(new AnswersDto 
+                        { 
+                            id = correct.Id, 
+                            Value = correct.RightAnswer 
+                        });
+                    }
+
+                    var wrongsToAdd = (Amount == 0 || Amount > WrongAnswers.Length + 1)
+                        ? WrongAnswers
+                        : WrongAnswers.OrderBy(x => rng.Next())
+                                    .Take(Amount - 1);
+
+                    allAnswers.AddRange(wrongsToAdd.Select(w => new AnswersDto
+                    {
+                        id = w.Id,
+                        Value = w.WrongAnswer
+                    }));
+
+                    NewQuestion.Answers.AddRange(allAnswers
+                        .OrderBy(a => rng.Next()));
+
+                    SendBack.Questions.Add(NewQuestion);
+                }
+
+                return Results.Ok(SendBack);
+            });
+
+            group.MapDelete("/DeleteQuiz/{id}", (int id, QuizWebContext db) =>
+            {
+                var quiz = db.Quizes.FirstOrDefault(q => q.Id == id);
+                
+                if (quiz == null)
+                {
+                    return Results.NotFound("Quiz not found.");
+                }
+
+                db.Quizes.Remove(quiz);
+                db.SaveChanges();
+
+                return Results.Ok("Quiz deleted successfully.");
+            });
+
+            group.MapPost("/CheckQuiz", (AnswersBackDTO Test, QuizWebContext db) =>{
+                int id = Test.quizId;
+                int FillerScore = 0;
+                var questionsWithAnswers = db.Questions
+                .Where(q => q.QuizID == id)
+                .Select(q => new
+                {
+                    id = q.Id,
+                    Question = q.Question,
+                    RightAnswers = db.RightAnswers
+                        .Where(r => r.QuestionID == q.Id)
+                        .Select(r => r.RightAnswer)
+                        .ToList()
+                })
+                .ToList();
+
+                foreach (var answer in Test.answers)
+                {
+                    var question = questionsWithAnswers.FirstOrDefault(q => q.id == answer.id);
+                    if (question != null && question.RightAnswers.Contains(answer.selected.value.Trim()))
+                    {
+                        FillerScore++;
+                    }
+                }
+
+
+
+                double percentage = (double)FillerScore / questionsWithAnswers.Count * 100;
+                double Result = Math.Round(percentage, 2);
+
+                if(!Test.infinite){
+                    FillersEntity NewFiller = new()
+                    {
+                        Quiz = db.Quizes.Find(Test.quizId),
+                        Points = Convert.ToInt16(Result)
+                    };
+
+                    db.Fillers.Add(NewFiller);
+                    db.SaveChanges();
+
+                    foreach(var prop in Test.props){
+                        FillerPropsEntity NewProps = new(){
+                        filler = NewFiller,
+                        name = prop.id,
+                        value = prop.value
+                        };
+
+
+                        db.FillerProps.Add(NewProps);
+                        db.SaveChanges();
+                    }
+
+                }
+            return Results.Ok(Result);
+            });
 
             return app;
         }

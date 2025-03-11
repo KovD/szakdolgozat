@@ -10,14 +10,38 @@ using Server_2_0.Data;
 namespace server2._0.Data.Migrations
 {
     [DbContext(typeof(QuizWebContext))]
-    [Migration("20250303132525_AddTables")]
-    partial class AddTables
+    [Migration("20250311125856_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
+
+            modelBuilder.Entity("Server_2_0.Entities.FillerPropsEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("fillerID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("fillerID");
+
+                    b.ToTable("FillerProps");
+                });
 
             modelBuilder.Entity("Server_2_0.Entities.FillersEntity", b =>
                 {
@@ -30,13 +54,6 @@ namespace server2._0.Data.Migrations
 
                     b.Property<int>("QuizId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("grade")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -75,6 +92,9 @@ namespace server2._0.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Amount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -99,9 +119,15 @@ namespace server2._0.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Infinite")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("QuizName")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Timer")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
@@ -200,6 +226,17 @@ namespace server2._0.Data.Migrations
                     b.HasIndex("QuizId");
 
                     b.ToTable("WrongAnswers");
+                });
+
+            modelBuilder.Entity("Server_2_0.Entities.FillerPropsEntity", b =>
+                {
+                    b.HasOne("Server_2_0.Entities.FillersEntity", "filler")
+                        .WithMany()
+                        .HasForeignKey("fillerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("filler");
                 });
 
             modelBuilder.Entity("Server_2_0.Entities.FillersEntity", b =>

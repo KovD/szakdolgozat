@@ -40,7 +40,15 @@ function Create() {
 
         if (res.status === 400) {
             alert('Something isn\'t filled');
+        } else if (res.status === 401) {
+            alert('You are not authorized');
+            localStorage.removeItem('token');
+        }else{
+            const data = await res.text();
+            alert(`Quiz uploaded with code: ${data}`);
+            window.location.reload()
         }
+
     }
 
     
@@ -73,10 +81,6 @@ function Create() {
         setQuestions(savedQuestions);
     }, []);
 
-    useEffect(() => {
-        localStorage.setItem("questions", JSON.stringify(questions));
-    }, [questions]);
-
     const togglePopup = () => {
         setIsPopupVisible(!isPopupVisible);
     };
@@ -103,6 +107,7 @@ function Create() {
     const deleteQuestion = (id) => {
         setQuestions((prevQuestions) => prevQuestions.filter(q => q.id !== id));
     };
+
 
     const updateQuestion = (id, field, value) => {
         setQuestions((prevQuestions) =>

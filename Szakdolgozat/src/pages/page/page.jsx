@@ -15,8 +15,8 @@ function Page(value) {
 
     return <div>
         <div id='BB'>
-        <button onClick={goToFill}>✎ Fill out</button>
-        <button onClick={goToCreate}>+ Create</button>
+        <button onClick={goToFill} id='page_button'>✎ Fill out</button>
+        <button onClick={goToCreate} id='page_button'>+ Create</button>
         </div>
     </div>
 }

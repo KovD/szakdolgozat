@@ -4,6 +4,7 @@ namespace Server_2_0.DTOS;
 
 public class SendbackQuiz
 {
+    public int ID {get; set;}
     public string Title { get; set; } = string.Empty;
     public int Timer { get; set; }
     public bool Infinite { get; set; }
@@ -13,6 +14,7 @@ public class SendbackQuiz
 }
 
 public class QuestionsDto{
+    public int id { get; set; }
     public string Question { get; set; } = string.Empty;
     public List<AnswersDto> Answers { get; set; } = new();
 }

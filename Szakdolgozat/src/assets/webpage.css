@@ -7,22 +7,21 @@ body {
     padding: 40px
 }
 
-button {
-    align-items: center;
-    background-color: rgb(92, 95, 255);
-    border-color: unset;
-    border-radius: 10px;
-    border-style: unset;
-    color: white;
-    padding-left: 3%;
-    padding-right: 3%;
-    padding-top: 1%;
-    padding-bottom: 1%;
-}
 
-button:hover {
-    background-color: rgb(34, 36, 115);
+
+button {
+    display: block;
+    background-color: rgb(92, 95, 255);
+    width: 80%;
+    padding: 12px;
+    margin-top: 2rem;
+    margin: 3%;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .overlay {
@@ -33,4 +32,10 @@ button:hover {
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
+}
+
+button:hover {
+    background: #0e3047;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(52, 152, 219, 0.2);
 }

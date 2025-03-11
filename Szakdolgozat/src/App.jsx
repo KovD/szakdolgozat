@@ -7,11 +7,13 @@ import './assets/webpage.css';
 import Login from './popups/login.jsx'
 import Header from './universal/header/header.jsx';
 import withAuth from './withAut.jsx';
+import QuizPalette from './pages/quiz/quiz_palette_not_inf.jsx';
+import ListQuizes from './pages/ListQuizes/ListQuizes.jsx';
 
 const ProtectedCreate = withAuth(Create);
+const ProtectedList = withAuth(ListQuizes);
 
 function App() {
-    
     const [showLogin, setShowLogin] = useState(false);;
 
     const loginShowerTrue = () => {
@@ -31,6 +33,8 @@ function App() {
                     <Route path="/" element={<Page/>} />
                     <Route path="/create" element={<ProtectedCreate/>}/>
                     <Route path="/fill" element={<Fill />} />
+                    <Route path="/quiz" element={<QuizPalette />} />
+                    <Route path="/list" element={<ProtectedList />} />
                 </Routes>
             </div>
         </Router>

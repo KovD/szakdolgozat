@@ -6,9 +6,10 @@
     margin-top: 10%;
 }
 
-button {
+#page_button {
     font-size: 70px;
     margin: 10px;
+    width: 30%;
 }
 
 @media (max-width: 500px) {
