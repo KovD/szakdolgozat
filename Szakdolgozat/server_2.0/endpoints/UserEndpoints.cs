@@ -400,8 +400,50 @@ namespace Server_2_0.endpoints.UserEndpoints
                 return Results.Ok("Quiz deleted successfully.");
             });
 
-            group.MapPost("/CheckQuiz", (AnswersBackDTO Test, QuizWebContext db) =>{
+            group.MapPost("/UploadData", (NewFillerDTO Filler, QuizWebContext db) => {
+                var quiz = db.Quizes.Find(Filler.QuizID);
+                if (quiz == null)
+                {
+                    return Results.BadRequest("Nem létező quiz ID!");
+                }
+                FillersEntity NewFiller = new(){
+                    Quiz = quiz
+                };
+                db.Fillers.Add(NewFiller);
+                db.SaveChanges();
+
+                foreach(var prop in Filler.Props){
+                    FillerPropsEntity NewProps = new(){
+                        filler = NewFiller,
+                        name = prop.Type,
+                        value = prop.Value
+                    };
+                    db.FillerProps.Add(NewProps);
+                    db.SaveChanges();
+                }
+                FillerCurrentEntity NewData = new(){
+                    Filler = NewFiller,
+                    start = Filler.Start
+                    
+                };
+                db.FillerData.Add(NewData);
+                db.SaveChanges();
+
+                return Results.Ok(NewFiller.Id);
+            });
+
+            group.MapDelete("/DeleteTemp/{id}",(int id, QuizWebContext db) =>{
+                var tempFiller = db.FillerData.FirstOrDefault(q => q.fillerID == id);
+
+                db.FillerData.Remove(tempFiller);
+                db.SaveChanges();
+
+                return Results.Ok();
+            });
+
+            group.MapPut("/CheckQuiz", (AnswersBackDTO Test, QuizWebContext db) =>{
                 int id = Test.quizId;
+                int filler = Test.FillerID;
                 int FillerScore = 0;
                 var questionsWithAnswers = db.Questions
                 .Where(q => q.QuizID == id)
@@ -431,29 +473,61 @@ namespace Server_2_0.endpoints.UserEndpoints
                 double Result = Math.Round(percentage, 2);
 
                 if(!Test.infinite){
-                    FillersEntity NewFiller = new()
-                    {
-                        Quiz = db.Quizes.Find(Test.quizId),
-                        Points = Convert.ToInt16(Result)
-                    };
+                    var Modfiller = db.Fillers.Find(filler);
 
-                    db.Fillers.Add(NewFiller);
+                    Modfiller.Points = Convert.ToInt16(Result);
                     db.SaveChanges();
 
-                    foreach(var prop in Test.props){
-                        FillerPropsEntity NewProps = new(){
-                        filler = NewFiller,
-                        name = prop.id,
-                        value = prop.value
-                        };
-
-
-                        db.FillerProps.Add(NewProps);
-                        db.SaveChanges();
-                    }
 
                 }
             return Results.Ok(Result);
+            });
+
+            group.MapGet("/GetMyQuizes", [Authorize](QuizWebContext db, HttpContext context) =>{
+                var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
+                int userId = int.Parse(userIdClaim.Value);
+                if (userIdClaim == null)
+                {
+                    return Results.Unauthorized();
+                }
+
+                var quizzesWithFillers = db.Quizes
+                .Where(q => q.UserId == userId)
+                .Select(q => new
+                {
+                    QuizName = q.QuizName,
+                    QuizID = q.Id,
+                    quizCode = q.Code,
+                    Fillers = db.Fillers
+                        .Where(f => f.QuizId == q.Id)
+                        .Select(f => new
+                        {
+                            Score = f.Points,
+                            Properties = db.FillerProps
+                                .Where(fp => fp.fillerID == f.Id)
+                                .Select(fp => new
+                                {
+                                    Name = fp.name,
+                                    Value = fp.value
+                                })
+                                .ToList()
+                        })
+                        .ToList()
+                })
+                .ToList();
+
+                return Results.Ok(quizzesWithFillers);
+            });
+            
+            group.MapPost("/GetTime", (GetTimeDTO TimeCheck, QuizWebContext db) => {
+                int time = db.Quizes.Find(TimeCheck.QuizID).Timer;
+                DateTime Start = db.FillerData.FirstOrDefault(w => w.fillerID ==TimeCheck.FillerID).start;
+
+                double elapsedMins = (TimeCheck.CurrentTime - Start).TotalMinutes;
+
+                var timer = new SendBackTime(Convert.ToInt16(elapsedMins), time);
+
+                return Results.Ok(timer);
             });
 
             return app;

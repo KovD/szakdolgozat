@@ -1,90 +1,145 @@
+.quiz-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
 
-.quiz-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: #f8f9fa;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+#timer-container {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  background-color: #f0f0f0;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 2px solid #ccc;
+  display: inline-block;
+  margin-bottom: 15px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-header {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.answer-options-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  max-width: 1000px;
+  margin-bottom: 30px;
+  overflow-x: auto;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.answer-option {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  background-color: #ffffff;
+  border: 2px solid #dedede;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 23%;
+  min-width: 200px;
+  text-align: center;
+  font-size: 1.1rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  margin: 0 5px;
+}
+
+.answer-option:hover {
+  transform: translateY(-3px);
+  border-color: #2980b9;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+}
+
+.answer-option input[type="radio"] {
+  display: none;
+}
+
+.answer-option.selected {
+  background-color: #3498db;
+  color: white;
+  border-color: #2980b9;
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.quiz-button {
+  background-color: #3498db;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 12px 30px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.quiz-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.quiz-button:disabled {
+  background-color: #7f8c8d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.copy-protection {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+@media (max-width: 768px) {
+  .answer-options-container {
+    justify-content: flex-start;
+    padding: 10px;
+  }
+  
+  .answer-option {
+    width: 45%;
+    min-width: 160px;
+    font-size: 1rem;
+    padding: 12px;
   }
   
   .quiz-header {
     font-size: 1.5rem;
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
   }
-  
-  .quiz-form {
-    position: relative;
-  }
-  
-  .question-text {
-    font-size: 1.2rem;
-    color: #34495e;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-    padding: 15px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
+}
+
+@media (max-width: 480px) {
   .answer-option {
-    display: block;
-    margin: 0.8rem 0;
-    padding: 12px 15px;
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    width: 90%;
+    min-width: 140px;
   }
   
-  .answer-option:hover {
-    transform: translateY(-2px);
-    border-color: #3498db;
-    box-shadow: 0 3px 8px rgba(52, 152, 219, 0.2);
-  }
-  
-  .answer-option input[type="radio"] {
-    margin-right: 10px;
-    accent-color: #3498db;
+  #timer-container {
+    font-size: 1.2rem;
+    padding: 6px 12px;
   }
   
   .quiz-button {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    margin-top: 1.5rem;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    font-size: 1rem;
+    padding: 10px 25px;
   }
-  
-  .quiz-button:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
-  }
-  
-  .quiz-button:hover:not(:disabled) {
-    background: #004b7d;
-  }
-  
-  .copy-protection {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-  
-  .copy-protection * {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
+}

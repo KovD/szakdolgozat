@@ -16,5 +16,6 @@ public class QuizWebContext : DbContext
     public DbSet<TagsEntity> Tags => Set<TagsEntity>();
     public DbSet<PropEntity> Props => Set<PropEntity>();
     public DbSet<FillerPropsEntity> FillerProps => Set<FillerPropsEntity>();
+    public DbSet<FillerCurrentEntity> FillerData => Set<FillerCurrentEntity>();
 
 }

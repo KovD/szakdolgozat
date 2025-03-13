@@ -56,7 +56,7 @@ function Props({signal, fixProps, onClose, isPopupVisible, togglePopup }) {
                 type="text"
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter quiz name"
-                maxLength={20} 
+                maxLength={30} 
             />
             <label htmlFor='timer'>Timer:</label>
             <input 

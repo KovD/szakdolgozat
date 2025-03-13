@@ -14,7 +14,7 @@ const ProtectedCreate = withAuth(Create);
 const ProtectedList = withAuth(ListQuizes);
 
 function App() {
-    const [showLogin, setShowLogin] = useState(false);;
+    const [showLogin, setShowLogin] = useState(false);
 
     const loginShowerTrue = () => {
         setShowLogin(true)

@@ -26,3 +26,13 @@ GET http://localhost:5000/users/GetQuizWithID/10
 
 ### 
 DELETE http://localhost:5000/users/DeleteQuiz/6
+
+###
+POST http://localhost:5000/users/GetTime
+Content-Type: application/json
+
+{
+    "currentTime": "2025-03-13T12:00:00",
+    "fillerID": 3,
+    "quizID": 1
+}

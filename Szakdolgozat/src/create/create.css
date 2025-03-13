@@ -15,6 +15,7 @@
     position: relative;
 }
 
+
 #column_right {
     width: 50%;
     height: 90vh;
@@ -31,7 +32,8 @@
 }
 
 .cont_but {
-    font-size: 200%;
+    font-size: medium;
+    width: 50%;
 }
 
 #publish {

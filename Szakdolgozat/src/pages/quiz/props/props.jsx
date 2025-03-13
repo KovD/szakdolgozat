@@ -26,7 +26,7 @@ function Props({ showProps, quizData, setPropsValues }) {
         }
       
         const formattedProps = props.map(prop => ({
-          id: prop.value,
+          Type: prop.value,
           value: localProps[prop.value]
         }));
       
