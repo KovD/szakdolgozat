@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import './login.css';
 
 function Login({ onClose }) {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [reg, setReg] = useState(false);
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
@@ -48,7 +49,7 @@ function Login({ onClose }) {
                 return;
             }
     
-            const response = await fetch('http://localhost:5000/users/register', {
+            const response = await fetch(`${API_URL}/users/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ function Login({ onClose }) {
                 setError(errorData.message || 'Regisztráció sikertelen');
             }
         } else {
-            const response = await fetch('http://localhost:5000/users/login', {
+            const response = await fetch(`${API_URL}/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,10 +91,6 @@ function Login({ onClose }) {
                 setError('Érvénytelen felhasználónév vagy jelszó');
             }
         }
-    };
-
-    const checkUsernameAvailability = async (username) => {
-        // Implement username availability check here
     };
 
     const renderLoginForm = () => (

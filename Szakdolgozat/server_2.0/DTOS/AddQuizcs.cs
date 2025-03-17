@@ -32,8 +32,8 @@ namespace Server_2_0.DTOS
 
     public class TagDto
     {
-        [JsonPropertyName("id")]
-        public string Id { get; set; } = string.Empty;
+        [JsonPropertyName("TagName")]
+        public string TagName { get; set; } = string.Empty;
 
         [JsonPropertyName("value")]
         public string Value { get; set; } = string.Empty;

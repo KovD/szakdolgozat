@@ -1,15 +1,32 @@
-import {useContext, useState } from "react";
+import {useEffect, useState } from "react";
 import "./slider.css";
 import TagElement from "./Tag/tag_element";
 
-function Tag_Slider({signal, tagfunc, setisSliderVisible, isVisible }) {
-  const [tags, setTags] = useState([]);
+function Tag_Slider({signal, tagfunc, setisSliderVisible, isVisible, initialTags}) {
+  const [tags, setTags] = useState(initialTags || []);
 
   const addTag = () => {
-    setTags([...tags, { id: Date.now() }]);
-  };
+    const newTag = {
+        id: Date.now(),
+    };
+    setTags((prevTags) => [...prevTags, newTag]);
+};
+
+  useEffect(()=>{
+    console.log(tags)
+    localStorage.setItem("TagComponents", JSON.stringify(tags))
+  },[signal])
+
+
+  useEffect(() => {
+    setTags(JSON.parse(localStorage.getItem("TagComponents")))
+    if (initialTags) {
+      setTags(initialTags);
+    }
+  }, [initialTags]);
 
   const onDelete = (id) => {
+    console.log(id)
     setTags(tags.filter(tag => tag.id !== id));
   };
 
@@ -21,7 +38,15 @@ function Tag_Slider({signal, tagfunc, setisSliderVisible, isVisible }) {
       <div id="tcontent">
           <div id="tag_table">
             {tags.map((tag) => (
-              <TagElement signal={signal} tagfunc={tagfunc} key={tag.id} onDelete={() => onDelete(tag.id)} />
+              <TagElement 
+              signal={signal}
+              id = {tag.id} 
+              tagfunc={tagfunc} 
+              key={tag.id} 
+              initialId={tag.TagName}
+              initialValue={tag.value}
+              onDelete={() => onDelete(tag.id)} 
+              />
             ))}
           </div>
           <button onClick={addTag}>Add Tag</button>

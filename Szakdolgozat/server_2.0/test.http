@@ -36,3 +36,5 @@ Content-Type: application/json
     "fillerID": 3,
     "quizID": 1
 }
+###
+GET http://localhost:5000/users/CheckToken

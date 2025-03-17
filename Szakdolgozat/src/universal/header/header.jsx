@@ -19,11 +19,15 @@ function Header({ loginShowerTrue }) {
         navigate('/list');
     };
 
+    const goAbout = () => {
+        navigate('/About');
+    };
+
     return (
         <div id="header">
             <TxtButton id="left"></TxtButton>
             <div id='right'>
-                <TxtButton text="About"></TxtButton>
+                <TxtButton onClick={goAbout}text="About"></TxtButton>
                 <TxtButton onClick={goToList} text="My Quises"></TxtButton>
                 <img 
                     src="src/assets/svg/login.svg" 

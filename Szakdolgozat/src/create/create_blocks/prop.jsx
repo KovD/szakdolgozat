@@ -2,16 +2,24 @@ import './create_design.css';
 import Popup from './create_popup/prop_popup';
 import {useRef, useEffect, useState } from 'react';
 import TypeVis from './element/typeVis';
-import {use } from 'react';
 
-function Props({signal, fixProps, onClose, isPopupVisible, togglePopup }) {
-    const [type, setType] = useState('');
-    const [name, setName] = useState('');
+const LOCAL_STORAGE_KEY = 'quiz_props';
+
+function Props({PropTitle, signal, fixProps, onClose, isPopupVisible, togglePopup, initialTimer = "", initialInfinite = false, initialProps = [],}) {
+    const [type, setType] = useState("");
+    const [name, setName] = useState("");
     const [typesList, setTypesList] = useState([]);
     const [timer, setTimer] = useState('');
     const [isInfinite, setIsInfinite] = useState(false);
     const [addedProps, setAddedProps] = useState([]);
     const typesListRef = useRef(typesList);
+
+    useEffect(() => {
+        setName(PropTitle || "");
+        setTimer(initialTimer || 0);
+        setIsInfinite(initialInfinite);
+        setTypesList(initialProps);
+      }, [PropTitle, initialTimer, initialInfinite, initialProps]);
 
     useEffect(() => {
         typesListRef.current = typesList;
@@ -51,21 +59,23 @@ function Props({signal, fixProps, onClose, isPopupVisible, togglePopup }) {
             <h1>Properties</h1>
             <label htmlFor='quiz-name'>Quiz Name:</label>
             <input 
-                className="prop_box"
-                id="name"
-                type="text"
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter quiz name"
-                maxLength={30} 
+            className="prop_box"
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter quiz name"
+            maxLength={30} 
             />
             <label htmlFor='timer'>Timer:</label>
             <input 
-                className="prop_box"
-                id="name"
-                type="number"
-                onChange={(e) => setTimer(e.target.value)}
-                maxLength={10} 
-                placeholder="Timer in sec"
+            className="prop_box"
+            id="timer"
+            type="number"
+            value={timer}
+            onChange={(e) => setTimer(e.target.value)}
+            maxLength={10} 
+            placeholder="Timer in sec"
             />
              <div className="infinite-toggle">
                 <label htmlFor="infinite-quiz">Infinite Quiz:</label>

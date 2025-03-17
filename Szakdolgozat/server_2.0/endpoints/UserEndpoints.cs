@@ -32,7 +32,7 @@ namespace Server_2_0.endpoints.UserEndpoints
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(2),
                 NotBefore = DateTime.UtcNow,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -103,6 +103,7 @@ namespace Server_2_0.endpoints.UserEndpoints
 
             group.MapPost("/PostQuiz", [Authorize](AddQuiz Quiz, QuizWebContext db, HttpContext context) =>
             {
+                Console.WriteLine(Quiz.Tags[0].TagName);
                 var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
                 string Gencode = GenerateRandomCode(db);
                 if (userIdClaim == null)
@@ -193,7 +194,7 @@ namespace Server_2_0.endpoints.UserEndpoints
                     TagsEntity NewTag = new()
                     {
                         QuizID = newQuiz.Id,
-                        Name = Tags.Id,
+                        Name = Tags.TagName,
                         Value = Tags.Value,
                         Quiz = newQuiz
                     };
@@ -204,6 +205,8 @@ namespace Server_2_0.endpoints.UserEndpoints
 
                 return Results.Ok(Gencode);
             });
+
+            group.MapGet("/CheckToken", [Authorize] () => Results.Ok(new { message = "Token is valid" }));
 
             group.MapGet("/GetQuiz/{code}", (string code, QuizWebContext db) =>
             {
@@ -442,6 +445,7 @@ namespace Server_2_0.endpoints.UserEndpoints
             });
 
             group.MapPut("/CheckQuiz", (AnswersBackDTO Test, QuizWebContext db) =>{
+                int points = 0;
                 int id = Test.quizId;
                 int filler = Test.FillerID;
                 int FillerScore = 0;
@@ -471,16 +475,24 @@ namespace Server_2_0.endpoints.UserEndpoints
 
                 double percentage = (double)FillerScore / questionsWithAnswers.Count * 100;
                 double Result = Math.Round(percentage, 2);
-
+                var Modfiller = db.Fillers.Find(filler);
                 if(!Test.infinite){
-                    var Modfiller = db.Fillers.Find(filler);
 
                     Modfiller.Points = Convert.ToInt16(Result);
-                    db.SaveChanges();
 
 
+                } else {
+                    var TempFiller = db.FillerData.FirstOrDefault(i => i.Id == Test.FillerID);
+                    if(Result > 0){TempFiller.Points += 1;}else{Modfiller.Points = TempFiller.Points;};
+                    points = TempFiller.Points;
                 }
-            return Results.Ok(Result);
+                db.SaveChanges();
+
+                SendbackRes res =  new(){
+                    Points = points,
+                    Percentage = Result
+                };
+            return Results.Ok(res);
             });
 
             group.MapGet("/GetMyQuizes", [Authorize](QuizWebContext db, HttpContext context) =>{
@@ -498,6 +510,7 @@ namespace Server_2_0.endpoints.UserEndpoints
                     QuizName = q.QuizName,
                     QuizID = q.Id,
                     quizCode = q.Code,
+                    IsInfinite = q.Infinite,
                     Fillers = db.Fillers
                         .Where(f => f.QuizId == q.Id)
                         .Select(f => new

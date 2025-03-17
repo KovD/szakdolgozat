@@ -1,30 +1,60 @@
 import { useState } from 'react';
 import FillerDetails from './prop';
 
-const QuizComponent = ({ quiz}) => {
+const QuizComponent = ({ quiz, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchItem, setSearchItem] = useState('')
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this quiz?')) {
+      await onDelete(quiz.quizID);
+    }
+  };
+
+  const handleCopyCode = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(quiz.quizCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
   return (
     <div className="quiz-block">
-      <div 
-        className="quiz-header" 
-        onClick={() => setIsOpen(!isOpen)}
-      >
-
+      <div className="quiz-header" onClick={() => setIsOpen(!isOpen)}>
         {quiz.quizName}
-        ({quiz.quizCode})
+        <button 
+          id="copy-button" 
+          onClick={handleCopyCode}
+          title="Copy quiz code"
+        >
+          📋 {quiz.quizCode}
+        </button>
+        <button 
+          id="delete-button" 
+          onClick={handleDelete}
+          title="Delete quiz"
+        >
+          ×
+        </button>
         <span className="toggle-icon">{isOpen ? '▼' : '▶'}</span>
       </div>
-      
       {isOpen && (
         <div className="fillers-container">
-          {quiz.fillers?.map((filler, index) => (
-            <FillerDetails 
-              key={index} 
-              filler={filler} 
-            />
-          ))}
+          {quiz.fillers
+            ?.slice()
+            ?.sort((a, b) => b.score - a.score)
+            ?.slice(0, 3)
+            ?.map((filler, index) => (
+              <FillerDetails
+                IsInfinite={quiz.IsInfinite}
+                key={index}
+                filler={filler}
+              />
+            ))}
         </div>
       )}
     </div>

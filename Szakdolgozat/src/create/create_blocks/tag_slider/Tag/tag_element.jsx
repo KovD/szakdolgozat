@@ -2,10 +2,17 @@ import React, { useContext, useState } from 'react';
 import { useEffect } from "react";
 import '../../question/quest.css';
 
-const TagElement = ({signal, tagfunc, onDelete }) => {
+const TagElement = ({id, signal, tagfunc, onDelete, initialId, initialValue }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [ID, setID] = useState('');
+  const [TagName, setTagName] = useState('');
   const [Value, setValue] = useState('');
+
+
+  useEffect(() => {
+
+    setTagName(initialId || "");
+    setValue(initialValue || "");
+  }, [initialId, initialValue]);
 
   const toggleCollapse = () => {
     setIsOpen(!isOpen);
@@ -14,7 +21,7 @@ const TagElement = ({signal, tagfunc, onDelete }) => {
   useEffect(() => {
     if(signal)
     {
-      tagfunc(ID, Value);
+      tagfunc(id, TagName, Value);
     }
   }, [signal]);
 
@@ -29,13 +36,13 @@ const TagElement = ({signal, tagfunc, onDelete }) => {
         onClick={toggleCollapse}
         className={`collapsible-header ${isOpen ? 'open' : ''}`}
       >
-        <div id="delete_quest" onClick={(e) => { e.stopPropagation(); onDelete(); }}>
+        <div id="delete_quest" onClick={(e) => { e.stopPropagation(); onDelete(id); }}>
           ⓧ
         </div>
         <input
           type="text"
-          value={ID}
-          onChange={(e) => setID(e.target.value)}
+          value={TagName}
+          onChange={(e) => setTagName(e.target.value)}
           placeholder="ID"
           className="collapsible-title-input"
           onClick={handleInputClick}

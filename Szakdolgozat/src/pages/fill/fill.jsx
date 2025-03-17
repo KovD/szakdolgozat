@@ -5,7 +5,7 @@ import Header from '../../universal/header/header'
 import QuizPalette from '../quiz/quiz_palette_not_inf.jsx';
 
 function Fill(){
-
+    const API_URL = import.meta.env.VITE_API_URL;
     const [code, setCode] = useState('')
     const changeCode = (e) => {
         setCode(e.target.value)
@@ -18,7 +18,7 @@ function Fill(){
 
     const submit = async () => {
         console.log(code)
-        const response = await fetch(`http://localhost:5000/users/GetQuiz/${code}`, {
+        const response = await fetch(`${API_URL}/users/GetQuiz/${code}`, {
             method: 'GET',
         });
     

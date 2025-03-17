@@ -13,6 +13,44 @@
     font-size: small;
   }
   
+  #delete-button {
+    margin-left: auto;
+    width: 10%;
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0 10px;
+  }
+
+  #copy-button {
+    margin-left: auto;
+    width: 30%;
+    background: none;
+    border: none;
+    color: #48c344;
+    cursor: pointer;
+    padding: 0 10px;
+    font-size: medium;
+  }
+
+  #copy-button:hover {
+    width: 35%;
+    font-size: large;
+    border-radius: 20px;
+    border: 2px solid black;
+  }
+  
+  #delete-button:hover {
+    color: #cc0000;
+  }
+  
+  .quiz-header {
+    display: flex;
+    align-items: center;
+  }
+
   .quiz-block {
     display: flex;
     flex-direction: column;

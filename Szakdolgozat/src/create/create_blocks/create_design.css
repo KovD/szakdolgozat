@@ -19,7 +19,7 @@
     flex-direction: row;
 }
 
-#name{
+#name,#timer{
     font-size:20px;
     width: 100%;
 }

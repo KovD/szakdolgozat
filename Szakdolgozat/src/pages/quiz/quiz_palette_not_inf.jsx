@@ -5,6 +5,7 @@ import Props from './props/props';
 import Questions from './questions/questions';
 
 function QuizPalette() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [seenProps, setSeenProps] = useState(false);
     const [propsValues, setPropsValues] = useState({});
     const location = useLocation();
@@ -23,7 +24,7 @@ function QuizPalette() {
                 };
 
                 try {
-                    const response = await fetch("http://localhost:5000/users/UploadData", {
+                    const response = await fetch(`${API_URL}/users/UploadData`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(payload)

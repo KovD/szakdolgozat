@@ -4,6 +4,7 @@ import Endpoint from "../endpoints/enpoint";
 import './questions.css'
 
 function Questions({Vprops, quizData, fillerID}) {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [processedQuestions, setProcessedQuestions] = useState([]);
     const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -13,18 +14,23 @@ function Questions({Vprops, quizData, fillerID}) {
     const [isTimer, setIsTimer] = useState(true);
     const [timer, setTimer] = useState(quizData.timer)
 
-    const EndQuiz = async(result) =>{
-        const payload = JSON.stringify({infinite: quizData.infinite, FillerID: fillerID, quizId: quizData.id, answers: result })
-                const response = await fetch('http://localhost:5000/users/CheckQuiz', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: payload,
-                });
+    const EndQuiz = async (result) => {
+        const payload = JSON.stringify({
+          infinite: quizData.infinite,
+          FillerID: fillerID,
+          quizId: quizData.id,
+          answers: result
+        });
+        
+        const response = await fetch(`${API_URL}/users/CheckQuiz`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+        });
+        
         if (!response.ok) throw new Error('Hiba a kérésben');
-        const percentage = await response.json();
-
-        return percentage
-    }
+        return await response.json();
+      };
 
     const replaceTags = (text) => {
         const replacements = {};
@@ -42,7 +48,7 @@ function Questions({Vprops, quizData, fillerID}) {
         if(isTimer){
             const interval = setInterval(async () => {
                 const time = new Date();
-                const response = await fetch('http://localhost:5000/users/GetTime', {
+                const response = await fetch(`${API_URL}/users/GetTime`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({currentTime: time, fillerID: fillerID, quizID: quizData.id }),
@@ -89,35 +95,21 @@ function Questions({Vprops, quizData, fillerID}) {
         setProcessedQuestions(questionsWithReplacedTags);
     }, [quizData]);
 
-
-    const IncreaseInfiniteScore = () => {
-        setInfiniteScore(infiniteScore + 1);
-    }
-
-    const resetQuiz = async () => {
-        const response = await fetch(`http://localhost:5000/users/GetQuizWithID/${quizData.id}`, {
-            method: 'GET',
-        });
-        const newQuizData = await response.json();
-        if (!newQuizData.questions) return;
-    
-        const questionsWithReplacedTags = newQuizData.questions.map((question) => ({
-            ...question,
-            realAnswers: question.answers.map(answer => ({ ...answer })),
-            question: replaceTags(question.question),
-            answers: question.answers.map((answer) => ({
-                ...answer,
-                value: replaceTags(answer.value),
-            })),
+    const resetQuiz = () => {
+        const newQuestions = quizData.questions.map(question => ({
+          ...question,
+          realAnswers: question.answers.map(a => ({...a})),
+          question: replaceTags(question.question),
+          answers: question.answers.map(answer => ({
+            ...answer,
+            value: replaceTags(answer.value)
+          }))
         }));
-        setProcessedQuestions(prev => {
-            const appended = [...prev, ...questionsWithReplacedTags];
-            const trimmed = appended.slice(currentQuestionIndex);
-            return trimmed;
-        });
-        setCurrentQuestionIndex(1);
+        
+        setProcessedQuestions(newQuestions);
+        setCurrentQuestionIndex(0);
         setSelectedAnswers({});
-    };
+      };
 
     const handleAnswerSelect = (questionId, answerIndex) => {
         setSelectedAnswers(prev => ({
@@ -136,45 +128,38 @@ function Questions({Vprops, quizData, fillerID}) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        if (!quizData.infinite) {
-            if (currentQuestionIndex < processedQuestions.length - 1) {
-                setCurrentQuestionIndex(prev => prev + 1);
-            } else {
-                const result = processedQuestions.map(question => ({
-                    id: question.id,
-                    question: question.question,
-                    selected: {
-                        index: selectedAnswers[question.id],
-                        value: question.realAnswers[selectedAnswers[question.id]]?.value || null
-                    }
-                }));
-                const percentage = await EndQuiz(result)
-                setScore(percentage);
-            }
+      
+        const result = [{
+          id: currentQuestion.id,
+          question: currentQuestion.question,
+          selected: {
+            index: selectedAnswers[currentQuestion.id],
+            value: currentQuestion.realAnswers[selectedAnswers[currentQuestion.id]]?.value || null
+          }
+        }];
+      
+        const response = await EndQuiz(result);
+        console.log(response)
+        if (quizData.infinite) {
+          if (response.percentage <= 0) {
+            setInfiniteEnd(true);
+          } else {
+            setInfiniteScore(response.points);
+          }
+      
+          if (currentQuestionIndex < processedQuestions.length - 1) {
+            setCurrentQuestionIndex(prev => prev + 1);
+          } else {
+            await resetQuiz();
+          }
         } else {
-            const result = [{
-                id: currentQuestion.id,
-                question: currentQuestion.question,
-                selected: {
-                    index: selectedAnswers[currentQuestion.id],
-                    value: currentQuestion.realAnswers[selectedAnswers[currentQuestion.id]]?.value || null
-                }
-            }];
-            const percentage = await EndQuiz(result)
-            if (percentage <= 0){
-                setInfiniteEnd(true);
-            } else {
-                IncreaseInfiniteScore();
-            };
-    
-            if (currentQuestionIndex < processedQuestions.length - 1) {
-                setCurrentQuestionIndex(prev => prev + 1);
-            } else {
-                await resetQuiz();
-            }
+          if (currentQuestionIndex < processedQuestions.length - 1) {
+            setCurrentQuestionIndex(prev => prev + 1);
+          } else {
+            setScore(response.percentage);
+          }
         }
-    };
+      };
 
     if (score !== null) {
         return (
@@ -203,9 +188,9 @@ function Questions({Vprops, quizData, fillerID}) {
           onCopy={handleCopy}
         >
             {isTimer ? <div id="timer-container">⏳ {timer} min</div>:null}
-          <div className="quiz-header">
-            {quizData.infinite ? `Score: ${infiniteScore}` : quizData.title}
-          </div>
+            <div className="quiz-header">
+                {quizData.infinite ? `Score: ${infiniteScore}` : quizData.title}
+            </div>
     
           <form onSubmit={handleSubmit} className="quiz-form">
             <h3 className="question-text">{currentQuestion.question}</h3>
