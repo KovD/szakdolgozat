@@ -33,7 +33,7 @@ const About = () => {
           <h2>🔒 Unique Code Access System</h2>
           <p>
             No registration required for participants. Access quizzes instantly using a 
-            <span className="highlight">6-character unique code</span> 
+            <span className="highlight"> 6-character unique code</span> 
             provided by the creator.
           </p>
         </div>
@@ -41,7 +41,7 @@ const About = () => {
         <div className="feature-card">
           <h2>🏷️ Dynamic Content Templating</h2>
           <p>
-            Utilize our <code>$$tag$$</code> syntax for randomized content generation:
+            Utilize our <code>$tag$</code> syntax for randomized content generation:
           </p>
           <pre className="code-example">
             {`Example:

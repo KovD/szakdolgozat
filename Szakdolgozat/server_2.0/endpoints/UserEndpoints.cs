@@ -103,7 +103,6 @@ namespace Server_2_0.endpoints.UserEndpoints
 
             group.MapPost("/PostQuiz", [Authorize](AddQuiz Quiz, QuizWebContext db, HttpContext context) =>
             {
-                Console.WriteLine(Quiz.Tags[0].TagName);
                 var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
                 string Gencode = GenerateRandomCode(db);
                 if (userIdClaim == null)
@@ -410,7 +409,8 @@ namespace Server_2_0.endpoints.UserEndpoints
                     return Results.BadRequest("Nem létező quiz ID!");
                 }
                 FillersEntity NewFiller = new(){
-                    Quiz = quiz
+                    Quiz = quiz,
+                    start = Filler.Start
                 };
                 db.Fillers.Add(NewFiller);
                 db.SaveChanges();
@@ -424,24 +424,8 @@ namespace Server_2_0.endpoints.UserEndpoints
                     db.FillerProps.Add(NewProps);
                     db.SaveChanges();
                 }
-                FillerCurrentEntity NewData = new(){
-                    Filler = NewFiller,
-                    start = Filler.Start
-                    
-                };
-                db.FillerData.Add(NewData);
-                db.SaveChanges();
 
                 return Results.Ok(NewFiller.Id);
-            });
-
-            group.MapDelete("/DeleteTemp/{id}",(int id, QuizWebContext db) =>{
-                var tempFiller = db.FillerData.FirstOrDefault(q => q.fillerID == id);
-
-                db.FillerData.Remove(tempFiller);
-                db.SaveChanges();
-
-                return Results.Ok();
             });
 
             group.MapPut("/CheckQuiz", (AnswersBackDTO Test, QuizWebContext db) =>{
@@ -471,20 +455,17 @@ namespace Server_2_0.endpoints.UserEndpoints
                     }
                 }
 
-
-
                 double percentage = (double)FillerScore / questionsWithAnswers.Count * 100;
                 double Result = Math.Round(percentage, 2);
                 var Modfiller = db.Fillers.Find(filler);
                 if(!Test.infinite){
-
                     Modfiller.Points = Convert.ToInt16(Result);
-
-
                 } else {
-                    var TempFiller = db.FillerData.FirstOrDefault(i => i.Id == Test.FillerID);
-                    if(Result > 0){TempFiller.Points += 1;}else{Modfiller.Points = TempFiller.Points;};
-                    points = TempFiller.Points;
+                    if (Result > 0)
+                    {
+                        Modfiller.Points += 1;
+                    }
+                    points = Modfiller.Points;
                 }
                 db.SaveChanges();
 
@@ -492,7 +473,7 @@ namespace Server_2_0.endpoints.UserEndpoints
                     Points = points,
                     Percentage = Result
                 };
-            return Results.Ok(res);
+                return Results.Ok(res);
             });
 
             group.MapGet("/GetMyQuizes", [Authorize](QuizWebContext db, HttpContext context) =>{
@@ -533,11 +514,15 @@ namespace Server_2_0.endpoints.UserEndpoints
             });
             
             group.MapPost("/GetTime", (GetTimeDTO TimeCheck, QuizWebContext db) => {
+                var filler = db.Fillers.FirstOrDefault(f => f.Id == TimeCheck.FillerID);
+                if (filler == null)
+                {
+                    return Results.BadRequest("Filler nem található!");
+                }
+                DateTime Start = filler.start;
                 int time = db.Quizes.Find(TimeCheck.QuizID).Timer;
-                DateTime Start = db.FillerData.FirstOrDefault(w => w.fillerID ==TimeCheck.FillerID).start;
 
                 double elapsedMins = (TimeCheck.CurrentTime - Start).TotalMinutes;
-
                 var timer = new SendBackTime(Convert.ToInt16(elapsedMins), time);
 
                 return Results.Ok(timer);

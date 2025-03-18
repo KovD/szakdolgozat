@@ -55,7 +55,8 @@ namespace server2._0.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Points = table.Column<int>(type: "INTEGER", nullable: false),
-                    QuizId = table.Column<int>(type: "INTEGER", nullable: false)
+                    QuizId = table.Column<int>(type: "INTEGER", nullable: false),
+                    start = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,27 +133,6 @@ namespace server2._0.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FillerData",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Points = table.Column<int>(type: "INTEGER", nullable: false),
-                    start = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    fillerID = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FillerData", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FillerData_Fillers_fillerID",
-                        column: x => x.fillerID,
-                        principalTable: "Fillers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "FillerProps",
                 columns: table => new
                 {
@@ -216,11 +196,6 @@ namespace server2._0.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_FillerData_fillerID",
-                table: "FillerData",
-                column: "fillerID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FillerProps_fillerID",
                 table: "FillerProps",
                 column: "fillerID");
@@ -264,9 +239,6 @@ namespace server2._0.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "FillerData");
-
             migrationBuilder.DropTable(
                 name: "FillerProps");
 

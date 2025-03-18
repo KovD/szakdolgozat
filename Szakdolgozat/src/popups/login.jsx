@@ -26,15 +26,15 @@ function Login({ onClose }) {
     const handleUsernameChange = (event) => {
         const value = event.target.value;
         setUsername(value);
-        if (value.length > 0) {
-            checkUsernameAvailability(value);
-        }
+        // if (value.length > 0) {
+        //     checkUsernameAvailability(value);
+        // }
     };
 
     const handlePassword2Change = (event) => {
         setPassword2(event.target.value);
         if (event.target.value !== password) {
-            setError('A jelszavak nem egyeznek');
+            setError('The passwords are not the same');
         } else {
             setError('');
         }
@@ -45,7 +45,7 @@ function Login({ onClose }) {
     
         if (reg) {
             if (password !== password2) {
-                setError('A jelszavak nem egyeznek');
+                setError('The passwords are not the same');
                 return;
             }
     
@@ -61,11 +61,11 @@ function Login({ onClose }) {
             });
     
             if (response.ok) {
-                alert('Sikeres regisztráció!');
+                alert('Succesfull registration');
                 switchPopup();
             } else {
                 const errorData = await response.json();
-                setError(errorData.message || 'Regisztráció sikertelen');
+                setError(errorData.message || 'Unsuccsesfull Registration');
             }
         } else {
             const response = await fetch(`${API_URL}/users/login`, {
@@ -83,23 +83,23 @@ function Login({ onClose }) {
                 const userData = await response.json();
                 if (userData.token) {
                     localStorage.setItem('token', userData.token);
+                    window.dispatchEvent(new Event("storage"));
                     onClose();
                 } else {
-                    setError('Bejelentkezés sikertelen');
+                    alert('Ligin Unsucsessful');
                 }
             } else {
-                setError('Érvénytelen felhasználónév vagy jelszó');
+                setError('Invalid username or password');
             }
         }
     };
-
     const renderLoginForm = () => (
         <form onSubmit={handleSubmit}>
-            <label htmlFor="username">Felhasználónév:</label><br />
+            <label htmlFor="username">Username:</label><br />
             <input
                 type="text"
                 id="username"
-                placeholder="felhasználónév"
+                placeholder="Username"
                 value={username}
                 onChange={handleUsernameChange}
                 required
@@ -109,50 +109,50 @@ function Login({ onClose }) {
             <input
                 type="password"
                 id="password"
-                placeholder="Jelszó"
+                placeholder="password"
                 value={password}
                 onChange={handlePasswordChange}
                 required
             />
             <br />
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button id="logButton" type="submit">Bejelentkezés</button><br />
-            <button id="regButton" type="button" onClick={switchPopup}>
-                Regisztráció
-            </button>
+            <div className="login-buttons">
+                <button type="submit">Login</button><br />
+                <button type="button" onClick={switchPopup}>Registration</button>
+            </div>
         </form>
     );
 
     const renderRegistrationForm = () => (
         <form onSubmit={handleSubmit}>
-            <label htmlFor="newusername">Felhasználónév:</label><br />
+            <label htmlFor="newusername">Username:</label><br />
             <input
                 type="text"
                 id="newusername"
-                placeholder="felhasználónév"
+                placeholder="username"
                 value={username}
                 onChange={handleUsernameChange}
                 maxLength={10}
                 required
             />
-            {isUsernameTaken && <p style={{ color: 'red' }}>A felhasználónév már foglalt.</p>}
+            {isUsernameTaken && <p style={{ color: 'red' }}>Username is taken</p>}
             <br />
-            <label htmlFor="newpassword">Jelszó:</label><br />
+            <label htmlFor="newpassword">Password:</label><br />
             <input
                 type="password"
                 id="newpassword"
-                placeholder="Jelszó"
+                placeholder="Password"
                 value={password}
                 onChange={handlePasswordChange}
                 maxLength={10}
                 required
             />
             <br />
-            <label htmlFor="newpassword2">Jelszó újra:</label><br />
+            <label htmlFor="newpassword2">Pawwsord again:</label><br />
             <input
                 type="password"
                 id="newpassword2"
-                placeholder="Jelszó újra"
+                placeholder="Password again"
                 value={password2}
                 onChange={handlePassword2Change}
                 maxLength={10}
@@ -160,8 +160,11 @@ function Login({ onClose }) {
             />
             <br />
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button type="button" onClick={switchPopup}>Vissza</button><br />
-            <button type="submit">Regisztráció</button>
+            <div className="login-buttons">
+                <button type="submit">Registration</button>
+                <button type="button" onClick={switchPopup}>Back to login</button><br />
+            </div>
+
         </form>
     );
 

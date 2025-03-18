@@ -18,6 +18,8 @@
     justify-content: flex-end;
     width: 50px;
     margin-left: auto;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 #left {

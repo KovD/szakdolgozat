@@ -11,7 +11,7 @@ using Server_2_0.Data;
 namespace server2._0.Data.Migrations
 {
     [DbContext(typeof(QuizWebContext))]
-    [Migration("20250313135028_InitialCreate")]
+    [Migration("20250317225851_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -19,28 +19,6 @@ namespace server2._0.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
-
-            modelBuilder.Entity("Server_2_0.Entities.FillerCurrentEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("fillerID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("start")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("fillerID");
-
-                    b.ToTable("FillerData");
-                });
 
             modelBuilder.Entity("Server_2_0.Entities.FillerPropsEntity", b =>
                 {
@@ -77,6 +55,9 @@ namespace server2._0.Data.Migrations
 
                     b.Property<int>("QuizId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("start")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -249,17 +230,6 @@ namespace server2._0.Data.Migrations
                     b.HasIndex("QuizId");
 
                     b.ToTable("WrongAnswers");
-                });
-
-            modelBuilder.Entity("Server_2_0.Entities.FillerCurrentEntity", b =>
-                {
-                    b.HasOne("Server_2_0.Entities.FillersEntity", "Filler")
-                        .WithMany()
-                        .HasForeignKey("fillerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Filler");
                 });
 
             modelBuilder.Entity("Server_2_0.Entities.FillerPropsEntity", b =>

@@ -9,7 +9,7 @@ const FillerDetails = ({ IsInfinite, filler }) => {
         ))}
       </div>
       <div id="scoreSection">
-        {!IsInfinite ? (
+        {IsInfinite ? (
           <>
             <div id="score-value-inf">🥇 {filler.score} 🥇</div>
           </>

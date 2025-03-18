@@ -15,12 +15,11 @@ const QuizComponent = ({ quiz, onDelete }) => {
     e.stopPropagation();
     try {
       await navigator.clipboard.writeText(quiz.quizCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
     }
   };
+
 
   return (
     <div className="quiz-block">
@@ -45,12 +44,12 @@ const QuizComponent = ({ quiz, onDelete }) => {
       {isOpen && (
         <div className="fillers-container">
           {quiz.fillers
-            ?.slice()
-            ?.sort((a, b) => b.score - a.score)
-            ?.slice(0, 3)
-            ?.map((filler, index) => (
+              ?.slice()
+              ?.sort((a, b) => b.score - a.score)
+              ?.slice(0, 3)
+              ?.map((filler, index) => (
               <FillerDetails
-                IsInfinite={quiz.IsInfinite}
+                IsInfinite={quiz.isInfinite}
                 key={index}
                 filler={filler}
               />

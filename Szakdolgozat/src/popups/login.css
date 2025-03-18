@@ -16,6 +16,7 @@
     z-index: 1010;
 }
 
+
 #panel {
     display: flex;
     flex-direction: column;
@@ -39,4 +40,11 @@
 
 #popup input {
     margin-bottom: 10px;
+}
+
+.login-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }

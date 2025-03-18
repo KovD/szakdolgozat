@@ -195,7 +195,7 @@ function Create() {
                             );
                         })}
                     </div>
-                    <button className="cont_but" title='Click here to add a new question' onClick={addNewQuestion}>
+                    <button id="add-button" title='Click here to add a new question' onClick={addNewQuestion}>
                         +
                     </button>
 

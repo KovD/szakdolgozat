@@ -5,14 +5,28 @@ import { useNavigate } from 'react-router-dom';
 
 function Header({ loginShowerTrue }) {
     const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setIsLoggedIn(!!localStorage.getItem('token'));
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
 
     const handleAuthClick = () => {
-            if(localStorage.getItem('token')){
-                localStorage.removeItem('token')
-                navigate('/');
-            } else {
-                loginShowerTrue();
-            }
+        if (isLoggedIn) {
+            localStorage.removeItem('token');
+            setIsLoggedIn(false);
+            navigate('/');
+        } else {
+            loginShowerTrue();
+        }
     };
 
     const goToList = () => {
@@ -27,12 +41,13 @@ function Header({ loginShowerTrue }) {
         <div id="header">
             <TxtButton id="left"></TxtButton>
             <div id='right'>
-                <TxtButton onClick={goAbout}text="About"></TxtButton>
-                <TxtButton onClick={goToList} text="My Quises"></TxtButton>
+                <TxtButton onClick={goAbout} text="About"></TxtButton>
+                <TxtButton onClick={goToList} text="My Quizes"></TxtButton>
                 <img 
-                    src="src/assets/svg/login.svg" 
+                    src={isLoggedIn ? "src/assets/svg/logout.svg" : "src/assets/svg/login.svg"} 
                     id="login" 
-                    onClick={()=>handleAuthClick()}
+                    onClick={handleAuthClick}
+                    alt={isLoggedIn ? "Logout" : "Login"}
                 />
             </div>
         </div>

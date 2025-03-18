@@ -64,11 +64,11 @@ function Questions({Vprops, quizData, fillerID}) {
                             index: selectedAnswers[question.id],
                             value: question.realAnswers[selectedAnswers[question.id]]?.value || "not f1lled Question"
                         }}))
-                        const percentage = await EndQuiz(result);
+                        const res = await EndQuiz(result);
                         if (quizData.infinite) {
                             if (percentage <= 0) setInfiniteEnd(true);
                         } else {
-                            setScore(percentage);
+                            setScore(res.percentage);
                         }
 
                 }
