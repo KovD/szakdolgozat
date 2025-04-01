@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import FillerDetails from './prop';
+import { useNavigate } from 'react-router-dom';
 
 const QuizComponent = ({ quiz, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const nav = useNavigate()
+
+  const modify = () =>{
+    nav('/create', {state: {id: quiz.quizID} })
+  }
 
   const handleDelete = async (e) => {
     e.stopPropagation();
@@ -32,6 +39,10 @@ const QuizComponent = ({ quiz, onDelete }) => {
         >
           📋 {quiz.quizCode}
         </button>
+        <button id="edit-button" 
+        onClick={()=>modify()}>
+            Edit
+          </button>
         <button 
           id="delete-button" 
           onClick={handleDelete}

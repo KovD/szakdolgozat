@@ -1,4 +1,3 @@
-// Quest.js
 import React, { useEffect, useState } from 'react';
 import './quest.css';
 
@@ -86,13 +85,17 @@ const Quest = ({ id, Questions, signal, onDelete, initialTitle, initialCorrectAn
               <label>Amount of answers:</label>
               <input 
                 id="amount"
+                min={0}
+                max={10}
                 type='number'
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => {
+                  const value = Math.max(0, Math.min(10, Number(e.target.value)));
+                  setAmount(value);
+                }}
                 placeholder='Enter how many answers'
                 className="collapsible-answer-input"
                 onClick={handleInputClick}
-                min="1"
               />
             </div>
           </div>

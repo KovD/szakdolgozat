@@ -44,8 +44,8 @@ function Props({PropTitle, signal, fixProps, onClose, isPopupVisible, togglePopu
         }
     };
 
-    const handleToggleInfinite = () => {
-        setIsInfinite(!isInfinite);
+    const handleToggleInfinite = (e) => {
+        setIsInfinite(e.target.checked);
     };
     
 
@@ -73,19 +73,20 @@ function Props({PropTitle, signal, fixProps, onClose, isPopupVisible, togglePopu
             id="timer"
             type="number"
             value={timer}
-            onChange={(e) => setTimer(e.target.value)}
-            maxLength={10} 
-            placeholder="Timer in sec"
+            onChange={(e) => setTimer(e.target.value.replace(/\D/, ""))} 
+            max={60}
+            min={0}
+            placeholder="Timer in min"
             />
              <div className="infinite-toggle">
-                <label htmlFor="infinite-quiz">Infinite Quiz:</label>
-                <button 
+                <input 
+                    type="checkbox"
                     id="infinite-quiz"
-                    onClick={handleToggleInfinite}
-                >
-                    {isInfinite ? 'Enabled' : 'Disabled'}
-                </button>
-            </div>
+                    checked={isInfinite}
+                    onChange={handleToggleInfinite}
+                />
+                <label htmlFor="infinite-quiz">Infinite Quiz:</label>
+                </div>
             <div className="types-container">
                 {typesList.map((item, index) => (
                     <TypeVis signal={signal} key={index} onDelete={() => handleDelete(index)} type={item.type} name={item.name} />

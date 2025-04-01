@@ -65,7 +65,7 @@ function Login({ onClose }) {
                 switchPopup();
             } else {
                 const errorData = await response.json();
-                setError(errorData.message || 'Unsuccsesfull Registration');
+                setError(errorData || 'Unsuccsesfull Registration');
             }
         } else {
             const response = await fetch(`${API_URL}/users/login`, {
@@ -86,7 +86,7 @@ function Login({ onClose }) {
                     window.dispatchEvent(new Event("storage"));
                     onClose();
                 } else {
-                    alert('Ligin Unsucsessful');
+                    alert('Login Unsucsessful');
                 }
             } else {
                 setError('Invalid username or password');

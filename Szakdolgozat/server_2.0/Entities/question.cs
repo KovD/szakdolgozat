@@ -6,4 +6,7 @@ namespace Server_2_0.Entities;
         public required int QuizID { get; set; }
         public int Amount { get; set; }
         public required QuizEntity Quiz { get; set; }
+
+        public List<WrongAnswersEntity> WrongAnswers { get; set; }
+        public List<RightAnswersEntity> RightAnswers { get; set; }
     }

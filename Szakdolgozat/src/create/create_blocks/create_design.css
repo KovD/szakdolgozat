@@ -1,12 +1,13 @@
 .box {
     width: 80%;
     min-height: 100px;
-    background-color: rgb(166, 213, 255);
+    background-color: #ecf0f1;
     flex-direction: column;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-    display: flex;
-    font-size:22px;
-    align-items:center;
+    display: flex
+;
+    font-size: 22px;
+    align-items: center;
     border-radius: 10px;
     padding: 6px 10%;
     height: auto;
@@ -47,12 +48,18 @@
     z-index: 1000;
 }
 
+.infinite-toggle{
+    display: flex;
+    flex-direction: row;
+}
+
 #infinite-quiz {
     width: 70px;
     height: 20px;
     font-size: 55%;
     padding: 0px;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 }

@@ -1,5 +1,4 @@
 import './page.css'
-import Header from '../../universal/header/header'
 import { useNavigate } from 'react-router-dom';
 function Page(value) {
 

@@ -17,8 +17,9 @@
 }
 
 #column_left {
-    background-color: rgb(132, 203, 236);
+    background-color: rgb(255 255 255);
     justify-content: center;
+    border-right: 5px solid #ececec;
 }
 
 #column_right {

@@ -2,12 +2,22 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    max-width: 600px;
+    max-width: 800px;
     margin: 20px auto;
     padding: 10 20px;
     align-items: center;
   }
   
+  #edit-button {
+    margin-left: auto;
+    width: 10%;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 10px;
+    font-size: smaller;
+  }
+
   #delete-button {
     margin-left: auto;
     width: 10%;
@@ -31,8 +41,6 @@
   }
 
   #copy-button:hover {
-    width: 35%;
-    font-size: large;
     border-radius: 20px;
     border: 2px solid black;
   }

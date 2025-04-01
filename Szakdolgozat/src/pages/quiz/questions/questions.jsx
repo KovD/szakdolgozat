@@ -66,7 +66,7 @@ function Questions({Vprops, quizData, fillerID}) {
                         }}))
                         const res = await EndQuiz(result);
                         if (quizData.infinite) {
-                            if (percentage <= 0) setInfiniteEnd(true);
+                            if (res.percentage <= 0) setInfiniteEnd(true);
                         } else {
                             setScore(res.percentage);
                         }
@@ -95,8 +95,12 @@ function Questions({Vprops, quizData, fillerID}) {
         setProcessedQuestions(questionsWithReplacedTags);
     }, [quizData]);
 
-    const resetQuiz = () => {
-        const newQuestions = quizData.questions.map(question => ({
+    const resetQuiz = async() => {
+
+        const response = await fetch(`${API_URL}/users/GetQuizWithID/${quizData.id}`)
+        const newquizData = await response.json();
+
+        const newQuestions = newquizData.questions.map(question => ({
           ...question,
           realAnswers: question.answers.map(a => ({...a})),
           question: replaceTags(question.question),

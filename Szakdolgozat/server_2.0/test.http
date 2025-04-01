@@ -38,3 +38,6 @@ Content-Type: application/json
 }
 ###
 GET http://localhost:5000/users/CheckToken
+
+###
+GET http://localhost:5000/users/CheckUsername/LOCIKA

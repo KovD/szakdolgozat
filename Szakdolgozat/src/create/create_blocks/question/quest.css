@@ -7,8 +7,11 @@
 
   .collapsible input{
     font-size: smaller;
+    width: 60%;
 
   }
+
+  
 
   #answers {
     display: flex;

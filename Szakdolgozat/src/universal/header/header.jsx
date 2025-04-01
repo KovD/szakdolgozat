@@ -7,6 +7,10 @@ function Header({ loginShowerTrue }) {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
 
+    const goHome = () => {
+        navigate('/');
+    };
+
     useEffect(() => {
         const handleStorageChange = () => {
             setIsLoggedIn(!!localStorage.getItem('token'));
@@ -39,7 +43,11 @@ function Header({ loginShowerTrue }) {
 
     return (
         <div id="header">
-            <TxtButton id="left"></TxtButton>
+            <TxtButton 
+                id="left" 
+                onClick={goHome} 
+                text="Home"
+            ></TxtButton>
             <div id='right'>
                 <TxtButton onClick={goAbout} text="About"></TxtButton>
                 <TxtButton onClick={goToList} text="My Quizes"></TxtButton>
