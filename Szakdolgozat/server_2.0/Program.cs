@@ -22,7 +22,7 @@ builder.Services.AddSqlite<QuizWebContext>(connString);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        builder => builder.WithOrigins("http://localhost:5173")
+        builder => builder.WithOrigins("https://kovd.github.io", "https://192.168.1.90:5173", "https://localhost:5173")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials());

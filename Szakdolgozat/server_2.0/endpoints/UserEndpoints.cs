@@ -107,6 +107,8 @@ namespace Server_2_0.endpoints.UserEndpoints
                 return Results.Ok(loginResponse);
             });
 
+            app.MapGet("/ping", () => Results.Ok("pong"));
+
             group.MapPost("/PostQuiz", [Authorize](AddQuiz Quiz, QuizWebContext db, HttpContext context) =>
             {
                 var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);

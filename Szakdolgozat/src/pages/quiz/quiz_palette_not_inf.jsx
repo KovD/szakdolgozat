@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import {useRef, useEffect, useState } from 'react';
-import './quiz_palette.css';
+//import './quiz_palette.css';
 import Props from './props/props';
 import Questions from './questions/questions';
 

@@ -143,7 +143,6 @@ function Questions({Vprops, quizData, fillerID}) {
         }];
       
         const response = await EndQuiz(result);
-        console.log(response)
         if (quizData.infinite) {
           if (response.percentage <= 0) {
             setInfiniteEnd(true);

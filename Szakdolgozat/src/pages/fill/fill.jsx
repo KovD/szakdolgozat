@@ -17,7 +17,6 @@ function Fill(){
     };
 
     const submit = async () => {
-        console.log(code)
         const response = await fetch(`${API_URL}/users/GetQuiz/${code}`, {
             method: 'GET',
         });

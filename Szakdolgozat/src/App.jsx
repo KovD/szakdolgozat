@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import Page from './pages/page/page.jsx';
 import Fill from './pages/fill/fill.jsx';
