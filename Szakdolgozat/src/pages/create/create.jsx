@@ -26,7 +26,7 @@ function Create() {
             
             const fetchData = async () => {
                 try {
-                    const response = await fetch(`${API_URL}/users/GetQuizDetails/${id}`, {
+                    const response = await fetch(`${API_URL}/quiz/GetQuizDetails/${id}`, {
                         method: 'GET',
                     });
                     
@@ -145,7 +145,7 @@ function Create() {
     
         try {
             if (isEdit) {
-                res = await fetch(`${API_URL}/users/UpdateQuiz`, {
+                res = await fetch(`${API_URL}/quiz/UpdateQuiz`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ function Create() {
                     })
                 });
             } else {
-                res = await fetch(`${API_URL}/users/PostQuiz`, {
+                res = await fetch(`${API_URL}/quiz/PostQuiz`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -97,7 +97,7 @@ function Questions({Vprops, quizData, fillerID}) {
 
     const resetQuiz = async() => {
 
-        const response = await fetch(`${API_URL}/users/GetQuizWithID/${quizData.id}`)
+        const response = await fetch(`${API_URL}/quiz/GetQuizWithID/${quizData.id}`)
         const newquizData = await response.json();
 
         const newQuestions = newquizData.questions.map(question => ({

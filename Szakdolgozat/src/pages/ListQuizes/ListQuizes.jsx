@@ -15,7 +15,7 @@ const ListQuizes = () => {
 
   const handleDeleteQuiz = async (quizId) => {
     console.log(quizId)
-    const res = await fetch(`${API_URL}/users/DeleteQuiz/${quizId}`, {
+    const res = await fetch(`${API_URL}/quiz/DeleteQuiz/${quizId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -30,7 +30,7 @@ const ListQuizes = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        const res = await fetch(`${API_URL}/users/GetMyQuizes`, {
+        const res = await fetch(`${API_URL}/quiz/GetMyQuizes`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

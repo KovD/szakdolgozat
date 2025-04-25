@@ -1,8 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './fill.css'
-import Header from '../../universal/header/header'
-import QuizPalette from '../quiz/quiz_palette_not_inf.jsx';
 
 function Fill(){
     const API_URL = import.meta.env.VITE_API_URL;
@@ -17,7 +15,7 @@ function Fill(){
     };
 
     const submit = async () => {
-        const response = await fetch(`${API_URL}/users/GetQuiz/${code}`, {
+        const response = await fetch(`${API_URL}/quiz/GetQuiz/${code}`, {
             method: 'GET',
         });
     

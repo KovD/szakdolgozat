@@ -2,7 +2,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import Page from './pages/page/page.jsx';
 import Fill from './pages/fill/fill.jsx';
-import Create from './create/create.jsx';
+import Create from './pages/create/create.jsx';
 import './assets/webpage.css';
 import Login from './popups/login.jsx'
 import Header from './universal/header/header.jsx';

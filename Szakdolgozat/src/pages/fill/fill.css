@@ -12,6 +12,8 @@
 
 input {
     font-size: 35px;
+    width: 80%;
+    max-width: 600px;
 }
 
 #submit{

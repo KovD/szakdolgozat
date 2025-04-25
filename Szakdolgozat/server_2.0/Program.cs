@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Server_2_0.Data;
 using Server_2_0.DTOS;
+using Server_2_0.endpoints.QuizEndpoints;
 using Server_2_0.endpoints.UserEndpoints;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,7 @@ var app = builder.Build();
 
 app.MigrateDB();
 app.RegisterUserEndpoints();
+app.RegisterQuizEndpoints();
 
 app.UseCors("AllowFrontend");
 
