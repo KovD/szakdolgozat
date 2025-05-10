@@ -31,9 +31,15 @@ function Fill(){
     <div id='fill'>
         <p>Please enter the code:</p>
         <input 
-        type="text" maxLength='10'
-        value={code}
-        onChange={changeCode}
+            type="text" 
+            maxLength="10"
+            value={code}
+            onChange={changeCode}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                submit();
+                }
+            }}
         />
         <button id='submit' onClick={submit}>Enter</button>
         <button id='back' onClick={goToBack}>Back</button>

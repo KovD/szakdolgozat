@@ -131,38 +131,51 @@ function Questions({Vprops, quizData, fillerID}) {
     const isAnswerSelected = selectedAnswers[currentQuestion.id] !== undefined;
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        const result = [{
-          id: currentQuestion.id,
-          question: currentQuestion.question,
-          selected: {
-            index: selectedAnswers[currentQuestion.id],
-            value: currentQuestion.realAnswers[selectedAnswers[currentQuestion.id]]?.value || null
-          }
-        }];
-      
-        const response = await EndQuiz(result);
-        if (quizData.infinite) {
+      e.preventDefault();
+  
+      if (quizData.infinite) {
+          // Küldd el csak az aktuális választ
+          const result = [{
+              id: currentQuestion.id,
+              question: currentQuestion.question,
+              selected: {
+                  index: selectedAnswers[currentQuestion.id],
+                  value: currentQuestion.realAnswers[selectedAnswers[currentQuestion.id]]?.value || null
+              }
+          }];
+  
+          const response = await EndQuiz(result);
+  
           if (response.percentage <= 0) {
-            setInfiniteEnd(true);
+              setInfiniteEnd(true);
           } else {
-            setInfiniteScore(response.points);
+              setInfiniteScore(response.points);
           }
-      
+  
           if (currentQuestionIndex < processedQuestions.length - 1) {
-            setCurrentQuestionIndex(prev => prev + 1);
+              setCurrentQuestionIndex(prev => prev + 1);
           } else {
-            await resetQuiz();
+              await resetQuiz();
           }
-        } else {
+  
+      } else {
+          // CSAK a végén küldd el az összes választ
           if (currentQuestionIndex < processedQuestions.length - 1) {
-            setCurrentQuestionIndex(prev => prev + 1);
+              setCurrentQuestionIndex(prev => prev + 1);
           } else {
-            setScore(response.percentage);
+              const result = processedQuestions.map(q => ({
+                  id: q.id,
+                  question: q.question,
+                  selected: {
+                      index: selectedAnswers[q.id],
+                      value: q.realAnswers[selectedAnswers[q.id]]?.value || "not filled"
+                  }
+              }));
+              const response = await EndQuiz(result);
+              setScore(response.percentage);
           }
-        }
-      };
+      }
+  };
 
     if (score !== null) {
         return (

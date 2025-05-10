@@ -7,15 +7,17 @@
 }
 
 #back{
+    margin-top: 10px;
     font-size: 20px;
 }
 
 input {
     font-size: 35px;
-    width: 80%;
+    width: 90%;
     max-width: 600px;
 }
 
 #submit{
+    margin-top: 20px;
     font-size: 40px;
 }
